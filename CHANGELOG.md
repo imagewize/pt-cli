@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-05-08
+
+### Added
+
+- **Unbalanced HTML tags check** in `BaseRules` (`src/Compliance/Rules/BaseRules.php`) — Detects unbalanced HTML tags (`<div>`, `<ul>`, `<ol>`, `<li>`, `<figure>`, `<figcaption>`, `<section>`, `<article>`, `<header>`, `<footer>`, `<nav>`, `<aside>`, `<main>`, `<p>`) in pattern files. Reports violations with opening/closing tag counts to help authors identify mismatches. Addresses issue #2 where missing `</div>` tags caused DOM nesting issues but went undetected by both pt-cli and `wp pattern validate`.
+- **PHPUnit test suite** (`tests/`) — First test suite for the project with comprehensive tests for the unbalanced HTML tags rule:
+  - `tests/bootstrap.php` — Test bootstrap file
+  - `tests/Compliance/Rules/BaseRulesTest.php` — Tests for BaseRules including unbalanced HTML tags detection
+
+### Changed
+
+- `.gitignore` — Added `.phpunit.cache/` directory
+
 ## [2.0.0] - 2026-05-08
 
 ### Added
