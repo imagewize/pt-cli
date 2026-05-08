@@ -1,1 +1,50 @@
+# Dependencies
 /vendor/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS generated files
+*.un~
+*.tmp
+*.log
+
+# Shell scripts
+pr-create.sh
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# Build and cache
+*.cache
+/build/
+/dist/
+/cache/
+
+# Testing
+/coverage/
+.phpunit.result.cache
+phpunit.xml
+
+# General
+*.bak
+*.orig
