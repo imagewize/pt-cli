@@ -69,6 +69,7 @@ class BaseRules extends AbstractRuleSet
         $violations = array_merge($violations, $this->checkFontPresetClasses($content));
         $violations = array_merge($violations, $this->checkBlockGapInlineStyles($content));
         $violations = array_merge($violations, $this->checkUntranslatedStrings($content));
+        $violations = array_merge($violations, $this->checkUnbalancedHtmlTags($content));
 
         if ($rules['requirePatternName'] ?? false) {
             $isTemplate = str_starts_with($patternName, 'template-');
@@ -897,5 +898,46 @@ class BaseRules extends AbstractRuleSet
             $line,
             1
         );
+    }
+
+    /**
+     * Check for unbalanced HTML tags in pattern files.
+     * This catches missing closing tags like </div> that can cause DOM nesting issues.
+     * Only checks structural HTML outside of block comments and PHP code.
+     *
+     * Note: <p> tags are included but WordPress block patterns use explicit <p class="wp-block-...">
+     * with matching </p>, so false positives are unlikely. The regex [^>]* correctly avoids
+     * matching <?php since ? != p after <\s*.
+     */
+    private function checkUnbalancedHtmlTags(string $content): array
+    {
+        $violations = [];
+
+        // Structural tags that should be balanced in pattern HTML
+        // Note: <li> is included even though HTML5 allows implicit closing, because
+        // WP block patterns use wp:list-item which explicitly closes them
+        $tags = ['div', 'ul', 'ol', 'li', 'figure', 'figcaption', 'section', 'article', 'header', 'footer', 'nav', 'aside', 'main', 'p'];
+
+        foreach ($tags as $tag) {
+            // Count opening tags (match <div, <div>, <div class="foo">, etc.)
+            $openingCount = preg_match_all('/<\s*' . $tag . '\b[^>]*>/i', $content);
+
+            // Count closing tags (match </div>, </div >, etc.)
+            $closingCount = preg_match_all('/<\/\s*' . $tag . '\s*>/i', $content);
+
+            if ($openingCount !== $closingCount) {
+                $violations[] = $this->violation(
+                    'unbalanced-html-tags',
+                    sprintf(
+                        'Unbalanced <%s> tags: %d opening, %d closing',
+                        $tag,
+                        $openingCount,
+                        $closingCount
+                    )
+                );
+            }
+        }
+
+        return $violations;
     }
 }

@@ -43,6 +43,7 @@ create-pr.sh
 # Testing
 /coverage/
 .phpunit.result.cache
+.phpunit.cache/
 phpunit.xml
 
 # General
