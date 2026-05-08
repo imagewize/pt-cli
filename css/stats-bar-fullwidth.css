@@ -1,0 +1,21 @@
+/* ── Elayne TODO-title ── */
+
+.elayne-TODO-slug {
+}
+
+/* Fix is-layout-flow margin injected on grid stat items */
+.elayne-TODO-slug .is-layout-grid > .wp-block-group {
+	margin-top: 0;
+}
+
+/* Vertical dividers between stat items on desktop */
+.elayne-TODO-slug .is-layout-grid > .wp-block-group + .wp-block-group {
+	border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 640px) {
+	.elayne-TODO-slug .is-layout-grid > .wp-block-group + .wp-block-group {
+		border-left: none;
+		border-top: 1px solid rgba(255, 255, 255, 0.2);
+	}
+}

@@ -1,0 +1,24 @@
+/* ── Elayne TODO-title ── */
+
+.elayne-TODO-slug {
+}
+
+/* Fix is-layout-flow margin injected on grid cards */
+.elayne-TODO-slug .is-layout-grid > .wp-block-group {
+	margin-top: 0;
+}
+
+/* Opening quote mark before the testimonial paragraph */
+.elayne-TODO-slug .is-layout-grid > .wp-block-group > p:first-child::before {
+	content: '\201C';
+	font-size: 1.5em;
+	line-height: 0;
+	vertical-align: -0.3em;
+	color: var(--wp--preset--color--primary-accent);
+	margin-right: 0.1em;
+}
+
+@media (max-width: 768px) {
+	.elayne-TODO-slug {
+	}
+}

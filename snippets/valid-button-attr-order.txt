@@ -1,0 +1,27 @@
+<!-- SNIPPET: valid-button-attr-order — wp:button attribute ordering for WP 6.6+ validation
+     KEY RULES:
+     - Root-level attrs (className, backgroundColor, textColor, borderColor) MUST come BEFORE style.
+     - Font size goes in style.typography.fontSize (CSS var string), NOT as root-level fontSize slug.
+       Root-level fontSize causes block validation failure on wp:button.
+     - The has-{slug}-font-size class does NOT belong on the outer wp:button div;
+       it goes on the <a> tag only when set via style.typography.fontSize.
+     - Attribute order: className → backgroundColor → textColor → borderColor → style → …
+-->
+
+<!-- Filled primary button (font size via style.typography.fontSize) -->
+<!-- wp:button {"className":"is-style-fill","backgroundColor":"primary","textColor":"base","style":{"border":{"radius":"0"},"typography":{"fontStyle":"normal","fontWeight":"500","letterSpacing":"0.16em","textTransform":"uppercase","fontSize":"var(--wp--preset--font-size--small)"}}} -->
+<div class="wp-block-button is-style-fill"><a class="wp-block-button__link has-base-color has-primary-background-color has-text-color has-background wp-element-button" style="border-radius:0;font-size:var(--wp--preset--font-size--small);font-style:normal;font-weight:500;letter-spacing:0.16em;text-transform:uppercase">Button label</a></div>
+<!-- /wp:button -->
+
+<!-- Outline secondary button -->
+<!-- wp:button {"className":"is-style-outline","textColor":"primary","borderColor":"primary","style":{"border":{"radius":"0","width":"1px"},"typography":{"fontStyle":"normal","fontWeight":"500","letterSpacing":"0.16em","textTransform":"uppercase","fontSize":"var(--wp--preset--font-size--small)"}}} -->
+<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-primary-color has-text-color has-border-color has-primary-border-color wp-element-button" style="border-width:1px;border-radius:0;font-size:var(--wp--preset--font-size--small);font-style:normal;font-weight:500;letter-spacing:0.16em;text-transform:uppercase">Button label</a></div>
+<!-- /wp:button -->
+
+<!-- Button pair wrapper (combine both buttons above inside this) -->
+<!-- wp:buttons {"style":{"spacing":{"blockGap":"var:preset|spacing|small"}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"left"}} -->
+<div class="wp-block-buttons">
+<!-- wp:button ... --><!-- /wp:button -->
+<!-- wp:button ... --><!-- /wp:button -->
+</div>
+<!-- /wp:buttons -->

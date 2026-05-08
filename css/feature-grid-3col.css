@@ -1,0 +1,22 @@
+/* ── Elayne TODO-title ── */
+
+.elayne-TODO-slug {
+}
+
+/* Fix is-layout-flow margin injected on grid cards */
+.elayne-TODO-slug .is-layout-grid > .wp-block-group {
+	margin-top: 0;
+}
+
+.elayne-TODO-slug .is-layout-grid > .wp-block-group {
+	transition: box-shadow 0.2s ease;
+}
+
+.elayne-TODO-slug .is-layout-grid > .wp-block-group:hover {
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 768px) {
+	.elayne-TODO-slug {
+	}
+}

@@ -1,0 +1,31 @@
+<!-- SNIPPET: valid-heading-with-preset — wp:heading with fontSize slug + matching utility class
+     KEY RULES:
+     - Set "fontSize" in the JSON comment using the theme slug (e.g. "x-large"), NOT an inline value.
+     - The matching utility class (has-{slug}-font-size) MUST appear on the <h*> element in HTML.
+     - Never use inline font-size (e.g. style="font-size:1.5rem") — causes JSON/HTML mismatch.
+     - Margin reset (top:"0", bottom:"0") prevents default browser heading margins from
+       overriding blockGap spacing set on the parent container.
+
+     Common slug → class pairs (from store.json scale):
+       "x-small"  → has-x-small-font-size
+       "small"    → has-small-font-size
+       "medium"   → has-medium-font-size
+       "large"    → has-large-font-size    (h3)
+       "x-large"  → has-x-large-font-size  (h2)
+       "xx-large" → has-xx-large-font-size (h1 / display)
+-->
+
+<!-- h2 with x-large preset -->
+<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"300","lineHeight":"1.1","letterSpacing":"-0.01em"},"spacing":{"margin":{"top":"0","bottom":"0"}}},"textColor":"primary","fontSize":"x-large","fontFamily":"var:preset|font-family|heading"} -->
+<h2 class="wp-block-heading has-primary-color has-text-color has-var-preset-font-family-heading-font-family has-x-large-font-size" style="margin-top:0;margin-bottom:0;font-style:normal;font-weight:300;letter-spacing:-0.01em;line-height:1.1">Heading text</h2>
+<!-- /wp:heading -->
+
+<!-- h3 with large preset -->
+<!-- wp:heading {"level":3,"style":{"typography":{"fontStyle":"normal","fontWeight":"300","lineHeight":"1.2"},"spacing":{"margin":{"top":"0","bottom":"0"}}},"textColor":"primary","fontSize":"large","fontFamily":"var:preset|font-family|heading"} -->
+<h3 class="wp-block-heading has-primary-color has-text-color has-var-preset-font-family-heading-font-family has-large-font-size" style="margin-top:0;margin-bottom:0;font-style:normal;font-weight:300;line-height:1.2">Heading text</h3>
+<!-- /wp:heading -->
+
+<!-- h1 / display heading with xx-large preset -->
+<!-- wp:heading {"level":1,"style":{"typography":{"fontStyle":"normal","fontWeight":"300","lineHeight":"1.05","letterSpacing":"-0.02em"},"spacing":{"margin":{"top":"0","bottom":"0"}}},"textColor":"primary","fontSize":"xx-large","fontFamily":"var:preset|font-family|heading"} -->
+<h1 class="wp-block-heading has-primary-color has-text-color has-var-preset-font-family-heading-font-family has-xx-large-font-size" style="margin-top:0;margin-bottom:0;font-style:normal;font-weight:300;letter-spacing:-0.02em;line-height:1.05">Display heading</h1>
+<!-- /wp:heading -->

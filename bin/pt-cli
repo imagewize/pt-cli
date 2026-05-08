@@ -14,9 +14,17 @@ foreach ($autoloadPaths as $path) {
 }
 
 use Imagewize\PtCli\Commands\CheckCommand;
+use Imagewize\PtCli\Commands\Scaffold\LayoutCreateCommand;
+use Imagewize\PtCli\Commands\Scaffold\PatternCreateCommand;
+use Imagewize\PtCli\Commands\Scaffold\PatternListCommand;
+use Imagewize\PtCli\Commands\Scaffold\StyleCreateCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('pt-cli', '1.0.0');
+$application = new Application('pt-cli', '2.0.0');
 $application->add(new CheckCommand());
-$application->setDefaultCommand('check');
+$application->add(new PatternCreateCommand());
+$application->add(new LayoutCreateCommand());
+$application->add(new StyleCreateCommand());
+$application->add(new PatternListCommand());
+$application->setDefaultCommand('list');
 $application->run();
