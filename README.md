@@ -204,6 +204,7 @@ Config lookup order:
 | No hardcoded font sizes (CSS px/rem/em) | No | Error |
 | No spacer blocks | No | Error |
 | Margin reset on alignfull patterns | No | Error |
+| Balanced HTML tags (`<div>`, `<ul>`, `<ol>`, `<li>`, `<figure>`, etc.) | No | Error |
 | Responsive grid for 3+ columns (warn on `wp:columns`) | No | Warning |
 | No hardcoded media IDs | No | Error |
 | Translated strings (HTML tags + alt attributes) | No | Error |
