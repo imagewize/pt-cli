@@ -904,12 +904,18 @@ class BaseRules extends AbstractRuleSet
      * Check for unbalanced HTML tags in pattern files.
      * This catches missing closing tags like </div> that can cause DOM nesting issues.
      * Only checks structural HTML outside of block comments and PHP code.
+     *
+     * Note: <p> tags are included but WordPress block patterns use explicit <p class="wp-block-...">
+     * with matching </p>, so false positives are unlikely. The regex [^>]* correctly avoids
+     * matching <?php since ? != p after <\s*.
      */
     private function checkUnbalancedHtmlTags(string $content): array
     {
         $violations = [];
 
         // Structural tags that should be balanced in pattern HTML
+        // Note: <li> is included even though HTML5 allows implicit closing, because
+        // WP block patterns use wp:list-item which explicitly closes them
         $tags = ['div', 'ul', 'ol', 'li', 'figure', 'figcaption', 'section', 'article', 'header', 'footer', 'nav', 'aside', 'main', 'p'];
 
         foreach ($tags as $tag) {

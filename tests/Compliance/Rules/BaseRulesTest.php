@@ -270,6 +270,28 @@ PHP;
         $this->assertStringContainsString('Unbalanced <ul> tags:', $tagViolations[0]['message']);
     }
 
+    public function testUnbalancedHtmlTagsPassesWithNoHtmlTags(): void
+    {
+        // Edge case: pattern with no HTML at all (just PHP header + empty block comment)
+        $content = <<<PHP
+<?php
+/**
+ * Title: Test Pattern
+ * Slug: test/test
+ */
+?>
+
+<!-- wp:paragraph {"content":""} /-->
+PHP;
+
+        $file = $this->createTempFile($content);
+        $violations = $this->rules->check($file);
+
+        // Filter to only unbalanced-html-tags violations
+        $tagViolations = array_filter($violations, fn($v) => $v['rule'] === 'unbalanced-html-tags');
+        $this->assertCount(0, $tagViolations, 'Pattern with no HTML tags should have zero unbalanced-html-tags violations');
+    }
+
     // ========================================================================
     // Other rule tests can be added here
     // ========================================================================
