@@ -76,26 +76,38 @@ Config lookup order:
 
 | Rule | Autofixable | Severity |
 |------|-------------|----------|
-| Balanced block delimiters | No | Error |
-| No hardcoded font sizes | No | Error |
+| No hardcoded font sizes (CSS px/rem/em) | No | Error |
 | No spacer blocks | No | Error |
-| Margin reset on alignfull | No | Error |
-| Valid block comment structure | No | Error |
-| Responsive grid for 3+ columns | No | Warning |
+| Margin reset on alignfull patterns | No | Error |
+| Responsive grid for 3+ columns (warn on `wp:columns`) | No | Warning |
 | No hardcoded media IDs | No | Error |
-| Translated strings | No | Error |
-| Proper patternName in outermost block | No | Error |
+| Translated strings (HTML tags + alt attributes) | No | Error |
+| Proper `patternName` in outermost block metadata | No | Error |
+| No HTML comments between opening tags and block comments | No | Error |
+| No custom domain emails (use `example@example.com`) | No | Error |
+| No hardcoded external URLs in `src` attributes | No | Error |
+| `wp:button` root `fontSize` must use `style.typography` | No | Error |
+| `wp:button` `className` must come before `style` in JSON | No | Error |
+| Cover block `minHeight` must have root-level units | No | Error |
+| No empty border side objects `{}` in block JSON | No | Error |
+| `wp:buttons` must have `<div class="wp-block-buttons">` wrapper | No | Error |
+| No `overflow:hidden` as inline style on group blocks | No | Error |
+| No `opacity` as inline style on HTML elements | No | Error |
+| Font preset classes match root-level `fontSize`/`fontFamily` | No | Error |
+| No stale inline `blockGap`/`gap`/`margin` on group/column wrappers | No | Error |
 
-### Elayne-specific rules
+### Elayne-specific rules (`--theme=elayne`)
 
 | Rule | Autofixable | Severity |
 |------|-------------|----------|
-| Theme attribute on template-part | No | Error |
-| PatternName prefix starts with `elayne/` | No | Error |
+| `wp:template-part` must have `"theme":"elayne"` attribute | No | Error |
+| `patternName` prefix must start with `elayne/` | No | Error |
 | No emoji icons | No | Warning |
-| No HTML comments between tags | No | Error |
-| WooCommerce namespace checks | No | Error |
-| WC product-collection rules | No | Error |
+| `woocommerce/product-title` inside `product-template` must use `post-title` + `__woocommerceNamespace` | No | Error |
+| WC native blocks must not have `__woocommerceNamespace` | No | Error |
+| `woocommerce/product-collection` must have `query` metadata | No | Error |
+| `woocommerce/product-collection` must have `<div class="wp-block-woocommerce-product-collection">` wrapper | No | Error |
+| `woocommerce/product-collection` must not have both `layout` and `displayLayout` | No | Error |
 
 ### Autofixable rules (`--autofix`)
 
@@ -109,7 +121,7 @@ Config lookup order:
 
 ### Exceptions
 
-- Templates (`template-*`, `header-*`, `footer-*`) allow: `border-radius:5px`, `border-radius:100px`
+- Templates (`template-*`, `header-*`, `footer-*`) allow: `border-radius:5px`, `border-radius:100px`, `blockGap:0.5rem`, `blockGap:10px`
 - WooCommerce plugin patterns (`wp-content/plugins/woocommerce/patterns/*`) are exempt from all checks
 
 ## Development
