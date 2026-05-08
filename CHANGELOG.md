@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - `.gitignore` — Added `.phpunit.cache/` directory
+- `README.md` — Added "Balanced HTML tags" rule to the Base rules table
 
 ## [2.0.0] - 2026-05-08
 
