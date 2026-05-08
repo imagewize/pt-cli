@@ -1,0 +1,29 @@
+{
+    "extends": "base",
+    "theme": {
+        "name": "Elayne",
+        "slug": "elayne",
+        "patternPrefix": "elayne/",
+        "type": "fse"
+    },
+    "compliance": {
+        "rules": {
+            "requireThemeAttribute": true,
+            "requirePatternName": true,
+            "disallowed": {
+                "hardcodedFontSizes": true,
+                "spacerBlocks": true,
+                "emojiIcons": true,
+                "hardcodedMediaIds": true
+            },
+            "woocommerce": {
+                "enabled": true,
+                "namespaceChecks": true,
+                "productCollectionRules": true
+            },
+            "templateExceptions": {
+                "allowedHardcodedValues": ["border-radius:5px", "border-radius:100px"]
+            }
+        }
+    }
+}

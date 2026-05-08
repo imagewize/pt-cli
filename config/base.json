@@ -1,0 +1,25 @@
+{
+    "theme": {
+        "name": "Generic FSE Theme",
+        "slug": "",
+        "patternPrefix": "",
+        "type": "fse"
+    },
+    "compliance": {
+        "rules": {
+            "requirePatternName": true,
+            "disallowed": {
+                "hardcodedFontSizes": true,
+                "spacerBlocks": true,
+                "hardcodedMediaIds": true
+            },
+            "woocommerce": {
+                "enabled": false
+            }
+        },
+        "autofix": {
+            "enabled": true,
+            "aggressive": false
+        }
+    }
+}

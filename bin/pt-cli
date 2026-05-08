@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+$autoloadPaths = [
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php',
+];
+
+foreach ($autoloadPaths as $path) {
+    if (file_exists($path)) {
+        require $path;
+        break;
+    }
+}
+
+use Imagewize\PtCli\Commands\CheckCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application('pt-cli', '1.0.0');
+$application->add(new CheckCommand());
+$application->setDefaultCommand('check');
+$application->run();
