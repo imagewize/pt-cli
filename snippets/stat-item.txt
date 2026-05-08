@@ -1,0 +1,11 @@
+<!-- SNIPPET: stat-item -->
+<!-- Usage: Place inside a wp:column within a stats bar pattern. -->
+<!-- Adjust colors for light/dark backgrounds. This version assumes dark bg. -->
+
+<!-- wp:paragraph {"align":"center","style":{"typography":{"fontWeight":"700","lineHeight":"1"}},"textColor":"primary-accent","fontSize":"xx-large","fontFamily":"decorative"} -->
+<p class="has-text-align-center has-primary-accent-color has-text-color has-decorative-font-family has-xx-large-font-size" style="font-weight:700;line-height:1"><?php esc_html_e( '99+', 'elayne' ); ?></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"align":"center","style":{"typography":{"textTransform":"uppercase","letterSpacing":"0.1em","fontWeight":"500"}},"textColor":"primary-alt","fontSize":"x-small","fontFamily":"body"} -->
+<p class="has-text-align-center has-primary-alt-color has-text-color has-body-font-family has-x-small-font-size" style="font-weight:500;letter-spacing:0.1em;text-transform:uppercase"><?php esc_html_e( 'TODO: Stat Label', 'elayne' ); ?></p>
+<!-- /wp:paragraph -->

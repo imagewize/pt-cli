@@ -1,0 +1,21 @@
+/* ── Elayne TODO-title ── */
+
+.elayne-TODO-slug {
+}
+
+/* Fix is-layout-flow margin injected on grid cards */
+.elayne-TODO-slug .is-layout-grid > .wp-block-group {
+	margin-top: 0;
+}
+
+/* Consistent portrait crop across all team photos */
+.elayne-TODO-slug .wp-block-image img {
+	aspect-ratio: 4 / 5;
+	object-fit: cover;
+	width: 100%;
+}
+
+@media (max-width: 768px) {
+	.elayne-TODO-slug {
+	}
+}

@@ -1,0 +1,12 @@
+<!-- SNIPPET: two-button-group -->
+<!-- Usage: Copy into any group after heading/body content. Replace TODO text and hrefs. -->
+
+<!-- wp:buttons {"style":{"spacing":{"blockGap":"var:preset|spacing|small","margin":{"top":"var:preset|spacing|medium"}}},"layout":{"type":"flex","justifyContent":"left","flexWrap":"wrap"}} -->
+<div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--medium)"><!-- wp:button {"backgroundColor":"primary-accent","textColor":"primary-alt","style":{"border":{"radius":"var:preset|border-radius|sm"},"spacing":{"padding":{"left":"var:preset|spacing|medium","right":"var:preset|spacing|medium","top":"var:preset|spacing|small","bottom":"var:preset|spacing|small"}},"typography":{"fontWeight":"600","fontSize":"var:preset|font-size|base"}},"fontFamily":"body"} -->
+<div class="wp-block-button"><a class="wp-block-button__link has-primary-alt-color has-primary-accent-background-color has-text-color has-background has-body-font-family has-custom-font-size wp-element-button" href="/TODO" style="border-radius:var(--wp--preset--border-radius--sm);padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--medium);font-size:var(--wp--preset--font-size--base);font-weight:600"><?php esc_html_e( 'TODO: Primary CTA', 'elayne' ); ?></a></div>
+<!-- /wp:button -->
+
+<!-- wp:button {"textColor":"base","className":"is-style-outline","style":{"border":{"radius":"var:preset|border-radius|sm","color":"var:preset|color|primary-accent","width":"1px"},"spacing":{"padding":{"left":"var:preset|spacing|medium","right":"var:preset|spacing|medium","top":"var:preset|spacing|small","bottom":"var:preset|spacing|small"}},"typography":{"fontWeight":"500","fontSize":"var:preset|font-size|base"}},"fontFamily":"body"} -->
+<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-base-color has-text-color has-border-color has-body-font-family has-custom-font-size wp-element-button" href="/TODO" style="border-color:var(--wp--preset--color--primary-accent);border-width:1px;border-radius:var(--wp--preset--border-radius--sm);padding-top:var(--wp--preset--spacing--small);padding-right:var(--wp--preset--spacing--medium);padding-bottom:var(--wp--preset--spacing--small);padding-left:var(--wp--preset--spacing--medium);font-size:var(--wp--preset--font-size--base);font-weight:500"><?php esc_html_e( 'TODO: Secondary CTA', 'elayne' ); ?></a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->

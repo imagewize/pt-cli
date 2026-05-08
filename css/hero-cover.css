@@ -1,0 +1,19 @@
+/* ── Elayne TODO-title ── */
+
+.elayne-TODO-slug {
+}
+
+.elayne-TODO-slug .wp-block-cover__background {
+	/* Tweak overlay: adjust opacity or background-color here */
+}
+
+@media (max-width: 600px) {
+	.elayne-TODO-slug .wp-block-buttons {
+		flex-direction: column;
+	}
+	.elayne-TODO-slug .wp-block-button,
+	.elayne-TODO-slug .wp-block-button__link {
+		width: 100%;
+		text-align: center;
+	}
+}

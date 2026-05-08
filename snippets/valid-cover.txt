@@ -1,0 +1,27 @@
+<!-- SNIPPET: valid-cover — wp:cover with full WP 6.6+ required attribute set
+     REQUIRED in JSON comment: minHeight (integer), minHeightUnit, dimRatio (integer),
+     AND one of: backgroundColor (slug) or customGradient (CSS string).
+     REQUIRED in HTML: style.dimensions.minHeight drives the inline min-height on the div.
+     span classes: has-background-dim-{N} has-background-dim (+ has-background-gradient for gradients).
+
+     VARIANT A — solid background color
+-->
+<!-- wp:cover {"minHeight":500,"minHeightUnit":"px","dimRatio":50,"backgroundColor":"primary","style":{"dimensions":{"minHeight":"500px"},"spacing":{"padding":{"top":"var:preset|spacing|xx-large","right":"var:preset|spacing|large","bottom":"var:preset|spacing|xx-large","left":"var:preset|spacing|large"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-cover has-primary-background-color has-background-dim" style="min-height:500px;padding-top:var(--wp--preset--spacing--xx-large);padding-right:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--xx-large);padding-left:var(--wp--preset--spacing--large)"><span aria-hidden="true" class="wp-block-cover__background has-primary-background-color has-background-dim-50 has-background-dim"></span><div class="wp-block-cover__inner-container">
+<!-- inner blocks here -->
+</div></div>
+<!-- /wp:cover -->
+
+<!-- VARIANT B — custom gradient (replace JSON comment above with this) -->
+<!-- wp:cover {"minHeight":680,"minHeightUnit":"px","dimRatio":90,"customGradient":"linear-gradient(160deg,#1e1a14 0%,#2d2416 50%,#1a1208 100%)","style":{"dimensions":{"minHeight":"680px"},"spacing":{"padding":{"top":"var:preset|spacing|xx-large","right":"var:preset|spacing|large","bottom":"var:preset|spacing|xx-large","left":"var:preset|spacing|large"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-cover" style="min-height:680px;padding-top:var(--wp--preset--spacing--xx-large);padding-right:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--xx-large);padding-left:var(--wp--preset--spacing--large)"><span aria-hidden="true" class="wp-block-cover__background has-background-dim-90 has-background-dim has-background-gradient" style="background:linear-gradient(160deg,#1e1a14 0%,#2d2416 50%,#1a1208 100%)"></span><div class="wp-block-cover__inner-container">
+<!-- inner blocks here -->
+</div></div>
+<!-- /wp:cover -->
+
+<!-- VARIANT C — dimRatio:0 (image visible, no overlay) -->
+<!-- wp:cover {"dimRatio":0,"minHeight":600,"minHeightUnit":"px","style":{"dimensions":{"minHeight":"600px"},"spacing":{"padding":{"top":"var:preset|spacing|xx-large","bottom":"var:preset|spacing|xx-large"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-cover" style="min-height:600px;padding-top:var(--wp--preset--spacing--xx-large);padding-bottom:var(--wp--preset--spacing--xx-large)"><span aria-hidden="true" class="wp-block-cover__background has-background-dim-0 has-background-dim"></span><div class="wp-block-cover__inner-container">
+<!-- inner blocks here -->
+</div></div>
+<!-- /wp:cover -->

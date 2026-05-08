@@ -1,6 +1,6 @@
 {
     "name": "imagewize/pt-cli",
-    "description": "Pattern compliance checker for WordPress FSE block themes",
+    "description": "Pattern scaffolding and compliance checker for WordPress FSE block themes",
     "type": "project",
     "license": "MIT",
     "require": {

@@ -1,0 +1,38 @@
+<!-- SNIPPET: valid-columns-wp66 — wp:columns for WP 6.6+ block validation
+     KEY RULES:
+     - NO inline gap or margin on the <div class="wp-block-columns"> element.
+       Use "spacing.blockGap" in JSON to control column gap — WP 6.6+ strips inline gap/margin.
+     - For side-by-side columns on mobile add "isStackedOnMobile":false in JSON,
+       which renders the "is-not-stacked-on-mobile" class on the div.
+     - Column widths: use "width" on wp:column (e.g. "55%" / "45%"), not inline styles.
+-->
+
+<!-- Two equal columns, never stacked on mobile -->
+<!-- wp:columns {"isStackedOnMobile":false,"style":{"spacing":{"blockGap":"var:preset|spacing|large","margin":{"top":"0","bottom":"0"}}}} -->
+<div class="wp-block-columns is-not-stacked-on-mobile"><!-- wp:column -->
+<div class="wp-block-column">
+<!-- left column content -->
+</div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column">
+<!-- right column content -->
+</div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+
+<!-- Two unequal columns (55/45 split), never stacked on mobile -->
+<!-- wp:columns {"isStackedOnMobile":false,"style":{"spacing":{"blockGap":"var:preset|spacing|x-large","margin":{"top":"0","bottom":"0"}}}} -->
+<div class="wp-block-columns is-not-stacked-on-mobile"><!-- wp:column {"width":"55%"} -->
+<div class="wp-block-column" style="flex-basis:55%">
+<!-- wider left column content -->
+</div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"45%"} -->
+<div class="wp-block-column" style="flex-basis:45%">
+<!-- narrower right column content -->
+</div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->

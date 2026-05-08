@@ -1,0 +1,22 @@
+<!-- SNIPPET: valid-fullwidth-section — alignfull outer group + margin reset + constrained inner
+     KEY RULES:
+     - Outer group: align="full", margin top/bottom "0" (no units — units cause validation failure).
+     - Inner group: layout.type="constrained" to keep content width within the theme content width.
+     - Horizontal padding goes on the OUTER group (prevents background color gaps on mobile).
+     - Never add gap or margin to the inner constrained group; use blockGap on it for child spacing.
+-->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|xx-large","right":"var:preset|spacing|large","bottom":"var:preset|spacing|xx-large","left":"var:preset|spacing|large"},"margin":{"top":"0","bottom":"0"}}},"backgroundColor":"primary","layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull has-primary-background-color has-background" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--xx-large);padding-right:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--xx-large);padding-left:var(--wp--preset--spacing--large)"><!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|large"}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group">
+<!-- constrained content here — headings, paragraphs, inner grids, etc. -->
+</div>
+<!-- /wp:group --></div>
+<!-- /wp:group -->
+
+<!-- Variant: alignfull with no background (e.g. for a separator-style band) -->
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|x-large","right":"var:preset|spacing|large","bottom":"var:preset|spacing|x-large","left":"var:preset|spacing|large"},"margin":{"top":"0","bottom":"0"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--x-large);padding-right:var(--wp--preset--spacing--large);padding-bottom:var(--wp--preset--spacing--x-large);padding-left:var(--wp--preset--spacing--large)">
+<!-- constrained content here -->
+</div>
+<!-- /wp:group -->

@@ -1,0 +1,20 @@
+/* ── Elayne TODO-title ── */
+
+.elayne-TODO-slug {
+}
+
+.elayne-TODO-slug .wp-block-buttons {
+	justify-content: center;
+}
+
+@media (max-width: 600px) {
+	.elayne-TODO-slug .wp-block-buttons {
+		flex-direction: column;
+		align-items: stretch;
+	}
+	.elayne-TODO-slug .wp-block-button,
+	.elayne-TODO-slug .wp-block-button__link {
+		width: 100%;
+		text-align: center;
+	}
+}

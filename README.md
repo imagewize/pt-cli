@@ -1,8 +1,8 @@
 # pt-cli
 
-Pattern compliance checker for WordPress FSE block themes.
+Pattern scaffolding and compliance checker for WordPress FSE block themes.
 
-Checks pattern `.php` files for structural and naming rule violations — no WordPress context required. Runs on the host machine as a standalone PHP CLI tool.
+Generates block pattern PHP files, layout patterns, and style variations. Checks pattern `.php` files for structural and naming rule violations — no WordPress context required. Runs on the host machine as a standalone PHP CLI tool.
 
 ## Installation
 
@@ -22,6 +22,27 @@ Requires PHP 8.1+.
 
 ## Usage
 
+### Scaffolding Commands
+
+```bash
+# List available templates, snippets, categories, and style variations
+pt-cli list
+
+# Scaffold a new pattern from a template
+pt-cli pattern:create --title="My Hero" --slug=my-hero --template=hero-cover --category=elayne/hero
+
+# Scaffold a layout pattern
+pt-cli layout:create --title="Landing Page" --slug=landing --layout=landing-page --category=elayne/pages
+
+# Scaffold a theme style variation
+pt-cli style:create --name="Ocean Legal" --vertical=legal
+
+# Full interactive mode (no options = prompts)
+pt-cli pattern:create
+```
+
+### Compliance Checking
+
 ```bash
 # Check all patterns in a directory
 pt-cli check /path/to/patterns
@@ -36,15 +57,119 @@ pt-cli check /path/to/patterns/header-default.php --theme=elayne
 pt-cli check /path/to/patterns --theme=elayne --autofix
 ```
 
+## Commands Reference
+
+| Command | Description |
+|---------|-------------|
+| `list` (default) | List available templates, snippets, categories, and style variations |
+| `pattern:create` | Scaffold a new Elayne block pattern from a template |
+| `layout:create` | Scaffold a new Elayne block layout pattern |
+| `style:create` | Scaffold a WordPress theme style variation JSON |
+| `check` | Check pattern files for compliance violations |
+
 ## Workflow
 
-`pt-cli` is one tool in a three-step pattern workflow:
+`pt-cli` is an all-in-one tool for WordPress FSE block theme development:
+
+### Scaffolding Workflow
 
 | Step | Tool | Purpose | Where |
 |------|------|---------|-------|
-| 1 | `elayne scaffold` | Generate pattern scaffolding | Host |
+| 1 | `pt-cli pattern:create` or `pt-cli layout:create` | Generate pattern/layout scaffolding | Host |
+| 2 | Build in WP editor | Create pattern content | VM |
+| 3 | Copy blocks | Copy all blocks from editor | VM |
+| 4 | `pt-cli pattern:create --shell-only` | Create PHP file with paste marker | Host |
+| 5 | Replace marker | Paste blocks into pattern file | Host |
+
+### Compliance Workflow
+
+| Step | Tool | Purpose | Where |
+|------|------|---------|-------|
+| 1 | `pt-cli check` | Generate pattern scaffolding | Host |
 | 2 | `wp pattern validate` | Structural validation (WordPress parser) | VM |
-| 3 | `pt-cli check` | Compliance checking | Host |
+| 3 | `pt-cli check --autofix` | Compliance checking with fixes | Host |
+
+## Templates
+
+**23 pre-built pattern templates** covering common use cases:
+
+| Template | Description |
+|----------|-------------|
+| `blank` | Empty pattern with header only |
+| `hero-cover` | Full-bleed wp:cover with bottom-center content |
+| `cta-fullwidth` | Full-width call-to-action band |
+| `feature-grid-3col` | Full-width section with 3 feature cards |
+| `stats-bar-fullwidth` | Dark full-width stats/numbers bar |
+| `two-column-text-image` | Text left, image right two-column layout |
+| `header-standard` | Standard header — logo, navigation, social links |
+| `footer-standard` | Standard footer — brand blurb, nav columns, subnav |
+| `testimonials-grid` | Responsive testimonial card grid with reviewer info |
+| `pricing-comparison` | Three-tier pricing table with elevated recommended card |
+| `blog-post-columns` | wp:query-driven 3-column post grid (portrait images) |
+| `team-grid` | Team member profile grid — photo, name, title, bio |
+
+**WooCommerce templates:**
+
+| Template | Description |
+|----------|-------------|
+| `woo-hero` | Two-column hero: text + CTA left, decorative cover right |
+| `woo-ticker` | Server-rendered marquee ticker bar (needs render_block filter) |
+| `woo-shop-categories` | CSS bento grid: one large featured card + four smaller cards |
+| `woo-featured-products` | Section header with View All + product-collection 4-col grid |
+| `woo-our-story` | Two-column brand story: monogram watermark left, text + stats right |
+| `woo-testimonials` | Three-column testimonial cards with star ratings and avatar circles |
+| `woo-newsletter` | Full-bleed newsletter signup with decorative eyebrow |
+| `woo-shop-landing` | Store homepage shell that composes sub-patterns in sequence |
+| `woo-cart` | Full-width cart page wrapper (Inserter: false) |
+| `woo-checkout` | Full-width checkout page wrapper (Inserter: false) |
+| `woo-filters-sidebar` | Sticky sidebar: price slider + colour-chip attribute + two checkbox-list attributes |
+| `woo-product-grid` | Filter-aware product-collection grid with sort toolbar + pagination |
+
+## Layouts
+
+**8 layout skeletons** for rapid page construction:
+
+| Layout | Description |
+|--------|-------------|
+| `full-width` | Single column, constrained — simplest starting point |
+| `two-column` | 50/50 columns block |
+| `three-column` | Grid with 3 equal groups |
+| `sidebar-left` | Narrow left sidebar (33%) + wide content area (66%) |
+| `sidebar-right` | Wide content area (66%) + narrow right sidebar (33%) |
+| `hero-image-left` | Cover image left + heading, text, CTA right |
+| `hero-image-right` | Heading, text, CTA left + cover image right |
+| `landing-page` | Hero + 3-column features + CTA — no header/footer wrapper |
+
+## Style Variations
+
+**5 preset color palettes** for common business verticals:
+
+| Vertical | Color Scheme |
+|----------|--------------|
+| `custom` | Enter your own hex color values |
+| `legal` | Navy blue + gold |
+| `plumbing` | Dark blue + orange |
+| `spa` | Sage green + sand |
+| `food-beverage` | Burgundy + gold |
+
+## Snippets
+
+**13 reusable code snippets** for common pattern components:
+
+| Snippet | Description |
+|---------|-------------|
+| `eyebrow-heading-body.txt` | Eyebrow label + heading + body paragraph |
+| `3col-grid-wrapper.txt` | Responsive 3-column grid wrapper |
+| `stat-item.txt` | Number + label stat card (dark background) |
+| `testimonial-card.txt` | Testimonial with stars, quote, author |
+| `two-button-group.txt` | Primary + outline button pair |
+| `overlay-grid-cover-card.txt` | Portrait cover image card + floating badge (use wp:cover, NOT wp:image) |
+| `valid-cover.txt` | wp:cover with all required attrs: dimRatio, backgroundColor/customGradient, minHeight (root integer) + minHeightUnit |
+| `valid-columns-wp66.txt` | wp:columns without inline gap/margin; isStackedOnMobile:false → is-not-stacked-on-mobile class |
+| `responsive-grid-min-width.txt` | wp:group grid layout with minimumColumnWidth — preferred over wp:columns for 3+ columns |
+| `valid-button-attr-order.txt` | wp:button with className/colors before style; font size via style.typography.fontSize |
+| `valid-fullwidth-section.txt` | alignfull outer group + margin reset (top/bottom:"0" no units) + constrained inner group |
+| `valid-heading-with-preset.txt` | wp:heading with fontSize slug in JSON and matching has-{slug}-font-size utility class in HTML |
 
 ## Configuration
 
@@ -130,6 +255,7 @@ Config lookup order:
 git clone https://github.com/imagewize/pt-cli
 cd pt-cli
 composer install
+bin/pt-cli list
 bin/pt-cli check --help
 ```
 
