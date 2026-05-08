@@ -27,7 +27,7 @@
 *.log
 
 # Shell scripts
-pr-create.sh
+create-pr.sh
 
 # Local env files
 .env
