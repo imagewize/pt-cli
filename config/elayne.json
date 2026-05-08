@@ -22,7 +22,7 @@
                 "productCollectionRules": true
             },
             "templateExceptions": {
-                "allowedHardcodedValues": ["border-radius:5px", "border-radius:100px"]
+                "allowedHardcodedValues": ["border-radius:5px", "border-radius:100px", "blockGap:0.5rem", "blockGap:10px"]
             }
         }
     }
