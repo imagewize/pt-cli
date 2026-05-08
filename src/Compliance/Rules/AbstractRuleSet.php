@@ -15,7 +15,7 @@ abstract class AbstractRuleSet implements RuleSetInterface
         return false;
     }
 
-    public function autofix(string $content): string
+    public function autofix(string $content, array &$applied = []): string
     {
         return $content;
     }

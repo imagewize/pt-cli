@@ -6,9 +6,17 @@ Checks pattern `.php` files for structural and naming rule violations — no Wor
 
 ## Installation
 
+As a global tool:
 ```bash
 composer global require imagewize/pt-cli
 ```
+
+Or as a project dev dependency (recommended for theme development):
+```bash
+composer require --dev imagewize/pt-cli
+```
+
+Then use `./vendor/bin/pt-cli` or add a Composer script.
 
 Requires PHP 8.1+.
 
