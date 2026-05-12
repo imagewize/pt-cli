@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-05-12
+
+### Added
+
+- **`check:templates` command** (`src/Commands/TemplateCheckCommand.php`) — new CLI command that scans `.html` template and template-part files for block-validation drift that the PHP pattern compliance checker cannot detect:
+  - Accepts a path to a single `.html` file or a directory (e.g. `templates/`, `parts/`)
+  - `--theme` option (default `base`) to load the matching config
+  - `--autofix` flag to apply mechanical repairs in-place
+  - Renders per-file pass/fail summary with rule name, line number, and severity
+
+- **`TemplateRules` rule set** (`src/Compliance/Rules/TemplateRules.php`) — five checks for FSE HTML template files:
+  - `taxQuery-object` — detects `"taxQuery":{}` (object); must be `[]` (array) to avoid WP-CLI "block structure needs normalization" warnings and editor save loops
+  - `woo-filter-missing-wrapper` — detects WooCommerce filter sub-blocks (`woocommerce/product-filter-active`, `-chips`, `-checkbox-list`, `-price-slider`, `-price`, `-attribute`, `-taxonomy`) that are self-closing or lack the required `<div class="wp-block-woocommerce-…">` wrapper introduced in WooCommerce 9.x+
+  - `woo-product-filters-css-vars` — detects `woocommerce/product-filters` div wrappers missing `--wc-product-filters-text-color` / `--wc-product-filters-background-color` CSS custom properties (added in WooCommerce 9.x+)
+  - `template-part-theme` — detects `wp:template-part` blocks missing the `"theme"` attribute (warning; requires `requireThemeAttribute: true` in config)
+  - `unbalanced-html-tags` — mirrors the BaseRules check for `<div>`, `<ul>`, `<ol>`, `<li>`, `<figure>`, `<figcaption>`, `<section>`, `<article>`, `<header>`, `<footer>`, `<nav>`, `<aside>`, `<main>`, `<p>` in HTML template files
+
+- **Two autofixable rules** in `TemplateRules`:
+  - `taxQuery:{}` → `taxQuery:[]`
+  - Inject missing `"theme":"<slug>"` into `wp:template-part` block comments
+
+- **`ComplianceChecker` template methods** (`src/Compliance/ComplianceChecker.php`):
+  - `checkTemplateFile(string $path, bool $autofix): array` — checks a single `.html` file through `templateRuleSets`
+  - `checkTemplateDirectory(string $dir, bool $autofix): array` — iterates `*.html` files in a directory and collects per-file results
+  - Separate `$templateRuleSets` property keeps template rules isolated from PHP pattern rule sets
+
+- **`woocommerce/product-filter-taxonomy`** added to `WOO_FILTER_BLOCKS` in `TemplateRules` — covers taxonomy-based filter blocks missing wrappers
+
+- **`tests/Compliance/Rules/TemplateRulesTest.php`** — PHPUnit tests for all five `TemplateRules` checks and both autofixes
+
+### Changed
+
+- `README.md` — updated to document the `check:templates` command, three-pass validation workflow (WP-CLI → `pt-cli check` → `pt-cli check:templates`), and new TemplateRules rule reference
+
 ## [2.1.0] - 2026-05-08
 
 ### Added
