@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - 2026-05-12
+
+### Added
+
+- **`border-color-raw-slug` rule** (`BaseRules`) — detects raw color slugs in `"border"` style objects (e.g. `"color":"border-light"`) that must be `"color":"var:preset|color|{slug}"`. A bare slug causes WordPress to emit `border-color:border-light` instead of the CSS variable, producing a `core/group` block validation mismatch in the site editor.
+
 ## [2.2.0] - 2026-05-12
 
 ### Added
