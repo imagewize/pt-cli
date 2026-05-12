@@ -1,8 +1,8 @@
-# pt-cli
+# pt-cli — WordPress Block Theme Developer Toolkit
 
-Pattern scaffolding and compliance checker for WordPress FSE block themes.
+Scaffolding, compliance checking, and HTML template validation for WordPress FSE block themes.
 
-Generates block pattern PHP files, layout patterns, and style variations. Checks pattern `.php` files for structural and naming rule violations — no WordPress context required. Runs on the host machine as a standalone PHP CLI tool.
+Generates block pattern PHP files, layout patterns, and style variations. Checks pattern `.php` files for structural and naming rule violations, and checks HTML template/part files for client-side block validation drift — no WordPress context required. Runs on the host machine as a standalone PHP CLI tool.
 
 ## Installation
 
@@ -57,6 +57,20 @@ pt-cli check /path/to/patterns/header-default.php --theme=elayne
 pt-cli check /path/to/patterns --theme=elayne --autofix
 ```
 
+### HTML Template Compliance
+
+```bash
+# Check all .html files in a templates or parts directory
+pt-cli check:templates /path/to/templates/ --theme=elayne
+pt-cli check:templates /path/to/parts/ --theme=elayne
+
+# Check a single template file
+pt-cli check:templates /path/to/templates/archive-product.html --theme=elayne
+
+# Apply mechanical autofixes (taxQuery:{} → [] and template-part theme attribute)
+pt-cli check:templates /path/to/templates/ --theme=elayne --autofix
+```
+
 ## Commands Reference
 
 | Command | Description |
@@ -65,7 +79,8 @@ pt-cli check /path/to/patterns --theme=elayne --autofix
 | `pattern:create` | Scaffold a new Elayne block pattern from a template |
 | `layout:create` | Scaffold a new Elayne block layout pattern |
 | `style:create` | Scaffold a WordPress theme style variation JSON |
-| `check` | Check pattern files for compliance violations |
+| `check` | Check PHP pattern files for compliance violations |
+| `check:templates` | Check HTML template/part files for block validation drift |
 
 ## Workflow
 
@@ -81,13 +96,15 @@ pt-cli check /path/to/patterns --theme=elayne --autofix
 | 4 | `pt-cli pattern:create --shell-only` | Create PHP file with paste marker | Host |
 | 5 | Replace marker | Paste blocks into pattern file | Host |
 
-### Compliance Workflow
+### Compliance Workflow (three-pass)
 
-| Step | Tool | Purpose | Where |
+| Pass | Tool | Purpose | Where |
 |------|------|---------|-------|
-| 1 | `pt-cli check` | Generate pattern scaffolding | Host |
-| 2 | `wp pattern validate` | Structural validation (WordPress parser) | VM |
-| 3 | `pt-cli check --autofix` | Compliance checking with fixes | Host |
+| 1 | `wp pattern validate --fix` | Structural validation (WordPress parser — unbalanced delimiters, malformed JSON, bad nesting) | VM |
+| 2 | `pt-cli check --theme=elayne` | PHP pattern compliance (hardcoded values, naming rules, WooCommerce block structure) | Host |
+| 3 | `pt-cli check:templates --theme=elayne` | HTML template compliance (WooCommerce save() drift, taxQuery, template-part theme attribute) | Host |
+
+Pass 1 requires WordPress (database connection) and runs in the Trellis VM. Passes 2 and 3 are standalone and run on the host machine.
 
 ## Templates
 
@@ -249,6 +266,22 @@ Config lookup order:
 
 - Templates (`template-*`, `header-*`, `footer-*`) allow: `border-radius:5px`, `border-radius:100px`, `blockGap:0.5rem`, `blockGap:10px`
 - WooCommerce plugin patterns (`wp-content/plugins/woocommerce/patterns/*`) are exempt from all checks
+
+### Template rules (`check:templates`)
+
+Applied to `.html` files in `templates/` and `parts/` directories. These checks catch client-side JavaScript `save()` mismatches that the PHP compliance checker and WP-CLI structural validator cannot detect.
+
+| Rule | Autofixable | Severity |
+|------|-------------|----------|
+| `taxQuery:{}` must be `taxQuery:[]` (object → array) | Yes | Error |
+| WooCommerce filter sub-blocks must have an HTML `<div>` wrapper | No | Error |
+| `woocommerce/product-filters` `<div>` must include WooCommerce CSS custom properties | No | Error |
+| `wp:template-part` must declare `"theme":"<slug>"` | Yes | Warning |
+| Balanced HTML tags (`<div>`, `<ul>`, `<ol>`, `<li>`, etc.) | No | Error |
+
+**Why separate from `check`?**
+
+The `check` command processes PHP pattern files. HTML template files use a different structure — raw block markup without PHP wrappers — and require different checks. In particular, WooCommerce 9.x+ changed the `save()` output for filter blocks to include empty `<div>` wrappers; templates written against older versions lack those wrappers and trigger client-side block validation errors that neither WP-CLI nor the PHP checker can catch.
 
 ## Development
 
