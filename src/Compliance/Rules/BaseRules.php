@@ -64,6 +64,8 @@ class BaseRules extends AbstractRuleSet
         $violations = array_merge($violations, $this->checkCoverBlockMinHeight($content));
         $violations = array_merge($violations, $this->checkEmptyBorderSideObjects($content));
         $violations = array_merge($violations, $this->checkBorderColorRawSlug($content));
+        $violations = array_merge($violations, $this->checkBorderStyleSolidInHtml($content));
+        $violations = array_merge($violations, $this->checkBorderPropertyOrderInHtml($content));
         $violations = array_merge($violations, $this->checkButtonsWrapper($content));
         $violations = array_merge($violations, $this->checkGroupOverflowHidden($content));
         $violations = array_merge($violations, $this->checkOpacityInlineStyle($content));
@@ -272,6 +274,36 @@ class BaseRules extends AbstractRuleSet
         // instead of border-color:var(--wp--preset--color--border-light), producing a block validation mismatch.
         if (preg_match('/"border"\s*:\s*\{[^}]*"color"\s*:\s*"(?!var:preset\|color\|)[a-z][a-z0-9-]*"/', $content, $matches)) {
             return [$this->violation('border-color-raw-slug', 'Raw color slug found in "border" object — use "color":"var:preset|color|{slug}" instead of a bare slug (e.g. "color":"border-light" → "color":"var:preset|color|border-light"). A raw slug causes WordPress to emit border-color:{slug} rather than the CSS variable, producing a block validation mismatch.')];
+        }
+        return [];
+    }
+
+    private function checkBorderStyleSolidInHtml(string $content): array
+    {
+        // WordPress's block save function does not emit border-style:solid when border color is set
+        // via a var:preset reference. Its presence in a <div> inline style means the HTML was written
+        // against an older serialization and will cause a block validation mismatch.
+        foreach (explode("\n", $content) as $line) {
+            $trimmed = ltrim($line);
+            if (str_starts_with($trimmed, '<div') && str_contains($line, 'border-style:solid')) {
+                return [$this->violation('border-style-solid-in-html', 'Found "border-style:solid" in a <div> inline style — WordPress\'s save function does not generate this when border color uses var:preset|color|. Its presence causes a block validation mismatch. Remove border-style:solid from the HTML.')];
+            }
+        }
+        return [];
+    }
+
+    private function checkBorderPropertyOrderInHtml(string $content): array
+    {
+        // WordPress serializes border-color before border-width in inline styles.
+        // border-width appearing before border-color in a <div> style attribute means the HTML
+        // was written against the old serialization order and will cause a block validation mismatch.
+        foreach (explode("\n", $content) as $line) {
+            if (!str_starts_with(ltrim($line), '<div')) {
+                continue;
+            }
+            if (preg_match('/style="[^"]*border-width:[^"]*border-color:[^"]*"/', $line)) {
+                return [$this->violation('border-property-order-in-html', 'Found "border-width" before "border-color" in a <div> inline style — WordPress serializes border-color first. Wrong order causes a block validation mismatch. Reorder to: border-color:...;border-width:...;border-radius:...')];
+            }
         }
         return [];
     }
