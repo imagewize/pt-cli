@@ -366,4 +366,92 @@ PHP;
         $ruleNames = array_column($violations, 'rule');
         $this->assertNotContains('border-color-raw-slug', $ruleNames);
     }
+
+    // ========================================================================
+    // Border Style Solid in HTML Tests
+    // ========================================================================
+
+    public function testBorderStyleSolidInHtmlIsViolation(): void
+    {
+        $content = <<<'PHP'
+            <?php ?>
+            <!-- wp:group {"style":{"border":{"width":"1px","color":"var:preset|color|border-light","radius":"0"}}} -->
+            <div class="wp-block-group has-border-color" style="border-width:1px;border-style:solid;border-radius:0;border-color:var(--wp--preset--color--border-light)"></div>
+            <!-- /wp:group -->
+            PHP;
+
+        $file = $this->createTempFile($content);
+        $violations = $this->rules->check($file);
+
+        $ruleNames = array_column($violations, 'rule');
+        $this->assertContains('border-style-solid-in-html', $ruleNames);
+    }
+
+    public function testBorderStyleSolidInHtmlPassesClean(): void
+    {
+        $content = <<<'PHP'
+            <?php ?>
+            <!-- wp:group {"style":{"border":{"width":"1px","color":"var:preset|color|border-light","radius":"0"}}} -->
+            <div class="wp-block-group has-border-color" style="border-color:var(--wp--preset--color--border-light);border-width:1px;border-radius:0"></div>
+            <!-- /wp:group -->
+            PHP;
+
+        $file = $this->createTempFile($content);
+        $violations = $this->rules->check($file);
+
+        $ruleNames = array_column($violations, 'rule');
+        $this->assertNotContains('border-style-solid-in-html', $ruleNames);
+    }
+
+    public function testBorderStyleSolidInBlockCommentIsIgnored(): void
+    {
+        $content = <<<'PHP'
+            <?php ?>
+            <!-- wp:group {"note":"border-style:solid is fine in comments"} -->
+            <div class="wp-block-group"></div>
+            <!-- /wp:group -->
+            PHP;
+
+        $file = $this->createTempFile($content);
+        $violations = $this->rules->check($file);
+
+        $ruleNames = array_column($violations, 'rule');
+        $this->assertNotContains('border-style-solid-in-html', $ruleNames);
+    }
+
+    // ========================================================================
+    // Border Property Order in HTML Tests
+    // ========================================================================
+
+    public function testBorderWidthBeforeBorderColorIsViolation(): void
+    {
+        $content = <<<'PHP'
+            <?php ?>
+            <!-- wp:group {"style":{"border":{"width":"1px","color":"var:preset|color|border-light","radius":"0"}}} -->
+            <div class="wp-block-group has-border-color" style="border-width:1px;border-radius:0;border-color:var(--wp--preset--color--border-light)"></div>
+            <!-- /wp:group -->
+            PHP;
+
+        $file = $this->createTempFile($content);
+        $violations = $this->rules->check($file);
+
+        $ruleNames = array_column($violations, 'rule');
+        $this->assertContains('border-property-order-in-html', $ruleNames);
+    }
+
+    public function testBorderColorBeforeBorderWidthPassesClean(): void
+    {
+        $content = <<<'PHP'
+            <?php ?>
+            <!-- wp:group {"style":{"border":{"width":"1px","color":"var:preset|color|border-light","radius":"0"}}} -->
+            <div class="wp-block-group has-border-color" style="border-color:var(--wp--preset--color--border-light);border-width:1px;border-radius:0"></div>
+            <!-- /wp:group -->
+            PHP;
+
+        $file = $this->createTempFile($content);
+        $violations = $this->rules->check($file);
+
+        $ruleNames = array_column($violations, 'rule');
+        $this->assertNotContains('border-property-order-in-html', $ruleNames);
+    }
 }

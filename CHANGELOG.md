@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.2] - 2026-05-12
+
+### Added
+
+- **`border-style-solid-in-html` rule** (`BaseRules`) — detects `border-style:solid` in `<div>` inline styles. WordPress's save function does not emit this property when border color uses `var:preset|color|`, so its presence in the pattern HTML guarantees a block validation mismatch.
+- **`border-property-order-in-html` rule** (`BaseRules`) — detects `border-width` appearing before `border-color` in a `<div>` inline style. WordPress always serializes `border-color` first; wrong order causes a block validation mismatch on template reset.
+
 ## [2.2.1] - 2026-05-12
 
 ### Added
