@@ -30,6 +30,7 @@ class TemplateRules extends AbstractRuleSet
         'woocommerce/product-filter-price-slider'  => 'wp-block-woocommerce-product-filter-price-slider',
         'woocommerce/product-filter-price'         => 'wp-block-woocommerce-product-filter-price',
         'woocommerce/product-filter-attribute'     => 'wp-block-woocommerce-product-filter-attribute',
+        'woocommerce/product-filter-taxonomy'      => 'wp-block-woocommerce-product-filter-taxonomy',
     ];
 
     /** HTML tags tracked for balance checks (mirrors BaseRules). */
