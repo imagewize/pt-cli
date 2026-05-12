@@ -63,6 +63,7 @@ class BaseRules extends AbstractRuleSet
         $violations = array_merge($violations, $this->checkButtonClassNameOrder($content));
         $violations = array_merge($violations, $this->checkCoverBlockMinHeight($content));
         $violations = array_merge($violations, $this->checkEmptyBorderSideObjects($content));
+        $violations = array_merge($violations, $this->checkBorderColorRawSlug($content));
         $violations = array_merge($violations, $this->checkButtonsWrapper($content));
         $violations = array_merge($violations, $this->checkGroupOverflowHidden($content));
         $violations = array_merge($violations, $this->checkOpacityInlineStyle($content));
@@ -260,6 +261,17 @@ class BaseRules extends AbstractRuleSet
     {
         if (preg_match('/"border"\s*:\s*\{[^}]*"(?:right|bottom|left|top)"\s*:\s*\{\}/', $content)) {
             return [$this->violation('empty-border-side-objects', 'Empty border side objects {} found in block JSON — WordPress serializes these as [] causing a validation mismatch. Remove the empty sides entirely (e.g. "border":{"top":{...}} not "border":{"top":{...},"right":{}})')];
+        }
+        return [];
+    }
+
+    private function checkBorderColorRawSlug(string $content): array
+    {
+        // Matches "border":{..."color":"some-slug"...} where the value is not a var:preset reference.
+        // Raw slugs (e.g. "color":"border-light") cause WordPress to emit border-color:border-light
+        // instead of border-color:var(--wp--preset--color--border-light), producing a block validation mismatch.
+        if (preg_match('/"border"\s*:\s*\{[^}]*"color"\s*:\s*"(?!var:preset\|color\|)[a-z][a-z0-9-]*"/', $content, $matches)) {
+            return [$this->violation('border-color-raw-slug', 'Raw color slug found in "border" object — use "color":"var:preset|color|{slug}" instead of a bare slug (e.g. "color":"border-light" → "color":"var:preset|color|border-light"). A raw slug causes WordPress to emit border-color:{slug} rather than the CSS variable, producing a block validation mismatch.')];
         }
         return [];
     }

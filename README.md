@@ -1,4 +1,4 @@
-# pt-cli — WordPress Block Theme Developer Toolkit
+# WordPress Pattern Toolkit
 
 Scaffolding, compliance checking, and HTML template validation for WordPress FSE block themes.
 

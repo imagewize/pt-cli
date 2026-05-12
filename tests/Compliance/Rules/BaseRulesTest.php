@@ -314,4 +314,56 @@ PHP;
     {
         $this->assertTrue($this->rules->isAutofixable());
     }
+
+    // ========================================================================
+    // Border Color Raw Slug Tests
+    // ========================================================================
+
+    public function testBorderColorRawSlugIsViolation(): void
+    {
+        $content = <<<'PHP'
+            <?php ?>
+            <!-- wp:group {"className":"elayne-engraving-option","style":{"border":{"width":"1px","color":"border-light","radius":"0"}}} -->
+            <div class="wp-block-group elayne-engraving-option"></div>
+            <!-- /wp:group -->
+            PHP;
+
+        $file = $this->createTempFile($content);
+        $violations = $this->rules->check($file);
+
+        $ruleNames = array_column($violations, 'rule');
+        $this->assertContains('border-color-raw-slug', $ruleNames);
+    }
+
+    public function testBorderColorPresetReferencePassesClean(): void
+    {
+        $content = <<<'PHP'
+            <?php ?>
+            <!-- wp:group {"className":"elayne-engraving-option","style":{"border":{"width":"1px","color":"var:preset|color|border-light","radius":"0"}}} -->
+            <div class="wp-block-group elayne-engraving-option"></div>
+            <!-- /wp:group -->
+            PHP;
+
+        $file = $this->createTempFile($content);
+        $violations = $this->rules->check($file);
+
+        $ruleNames = array_column($violations, 'rule');
+        $this->assertNotContains('border-color-raw-slug', $ruleNames);
+    }
+
+    public function testBorderColorEmptyObjectPassesClean(): void
+    {
+        $content = <<<'PHP'
+            <?php ?>
+            <!-- wp:group {"style":{"border":{"width":"1px","radius":"0"}}} -->
+            <div class="wp-block-group"></div>
+            <!-- /wp:group -->
+            PHP;
+
+        $file = $this->createTempFile($content);
+        $violations = $this->rules->check($file);
+
+        $ruleNames = array_column($violations, 'rule');
+        $this->assertNotContains('border-color-raw-slug', $ruleNames);
+    }
 }
