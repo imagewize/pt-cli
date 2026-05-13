@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.3] - 2026-05-13
+
+### Added
+
+- **`button-width-classes` rule** (`BaseRules`) — detects `wp:button` blocks that have `"width":N` in their JSON but whose HTML outer `<div>` is missing the `has-custom-width` and/or `wp-block-button__width-{N}` classes, or where the inner `<a>` still carries a `width:{N}%` inline style. WordPress's `core/button` save function expresses percentage width via CSS classes on the outer div — not inline style — so any mismatch causes a block validation failure in the editor.
+
 ## [2.2.2] - 2026-05-12
 
 ### Added

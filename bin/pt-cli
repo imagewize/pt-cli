@@ -21,7 +21,7 @@ use Imagewize\PtCli\Commands\Scaffold\StyleCreateCommand;
 use Imagewize\PtCli\Commands\TemplateCheckCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('pt-cli', '2.0.0');
+$application = new Application('pt-cli', '2.2.3');
 $application->add(new CheckCommand());
 $application->add(new TemplateCheckCommand());
 $application->add(new PatternCreateCommand());

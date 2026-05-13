@@ -61,6 +61,7 @@ class BaseRules extends AbstractRuleSet
         $violations = array_merge($violations, $this->checkExternalUrls($content));
         $violations = array_merge($violations, $this->checkButtonRootFontSize($content));
         $violations = array_merge($violations, $this->checkButtonClassNameOrder($content));
+        $violations = array_merge($violations, $this->checkButtonWidthClasses($content));
         $violations = array_merge($violations, $this->checkCoverBlockMinHeight($content));
         $violations = array_merge($violations, $this->checkEmptyBorderSideObjects($content));
         $violations = array_merge($violations, $this->checkBorderColorRawSlug($content));
@@ -241,6 +242,44 @@ class BaseRules extends AbstractRuleSet
                 if ($stylePos !== false && $classPos !== false && $stylePos < $classPos) {
                     return [$this->violation('button-classname-order', 'wp:button has className after style in JSON — move className before style (root-level attributes must come first)')];
                 }
+            }
+        }
+        return [];
+    }
+
+    private function checkButtonWidthClasses(string $content): array
+    {
+        // When wp:button has "width":N, the save() function emits:
+        //   <div class="wp-block-button has-custom-width wp-block-button__width-{N} ...">
+        // and does NOT put width:{N}% in the <a> inline style.
+        // Patterns that instead use is-width-full + inline width:100% will fail validation.
+        $lines = explode("\n", $content);
+        $total = count($lines);
+        for ($i = 0; $i < $total; $i++) {
+            $line = $lines[$i];
+            if (!str_contains($line, '<!-- wp:button') || !preg_match('/"width"\s*:\s*(\d+)/', $line, $m)) {
+                continue;
+            }
+            $pct = (int) $m[1];
+            // Scan current line and the next two for the HTML div.
+            for ($j = $i; $j <= $i + 2 && $j < $total; $j++) {
+                $html = $lines[$j];
+                if (!str_contains($html, 'wp-block-button')) {
+                    continue;
+                }
+                if (!str_contains($html, 'has-custom-width') || !str_contains($html, "wp-block-button__width-{$pct}")) {
+                    return [$this->violation(
+                        'button-width-classes',
+                        "wp:button has \"width\":{$pct} but the outer <div> is missing has-custom-width and/or wp-block-button__width-{$pct} — add both classes and remove width:{$pct}% from the <a> inline style to match core/button save() output"
+                    )];
+                }
+                if (str_contains($html, "width:{$pct}%")) {
+                    return [$this->violation(
+                        'button-width-classes',
+                        "wp:button has \"width\":{$pct} but the <a> still has width:{$pct}% inline style — remove it (save() expresses width via has-custom-width + wp-block-button__width-{$pct} classes on the outer div, not inline style)"
+                    )];
+                }
+                break;
             }
         }
         return [];
