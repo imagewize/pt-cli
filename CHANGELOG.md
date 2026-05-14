@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-05-14
+
+### Added
+
+- **`pattern:diff --apply` flag** — merges Gutenberg clipboard HTML back into an existing PHP pattern file while preserving all PHP translation wrappers (`esc_html_e`, `esc_attr_e`, `wp_kses_post`, `get_template_directory_uri`). Strips editor-only attributes (`__privatePreviewState`), normalises bare font-size slug values to CSS variables, and removes nested `<p>` copy artefacts. Pair with `--dry-run` to preview the merged result before writing.
+
+- **`pattern:diff --dry-run` flag** — prints the merged result to stdout instead of writing to disk; only meaningful when combined with `--apply`.
+
+- **`PatternSyncer` class** (`src/PatternDiff/PatternSyncer.php`) — implements the merge strategy: extracts the PHP docblock header, builds a `text → PHP call` map from all translation wrappers in the original file, applies structural fixes to the clipboard, then walks every HTML text node replacing raw strings with their original wrappers (or generating new `esc_html_e()` calls for new strings).
+
+### Fixed
+
+- **`PatternDiffer::isTranslatable()`** — the `if (preg_match(...))` guard around the CSS-value `return false` branch was accidentally omitted, causing the method to always return `false` after the single-character check. All text nodes after that point were silently skipped by the translation detector.
+
 ## [2.2.3] - 2026-05-13
 
 ### Added

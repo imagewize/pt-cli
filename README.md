@@ -71,6 +71,33 @@ pt-cli check:templates /path/to/templates/archive-product.html --theme=elayne
 pt-cli check:templates /path/to/templates/ --theme=elayne --autofix
 ```
 
+### Pattern Diff & Sync
+
+Compare a Gutenberg clipboard paste against an existing PHP pattern file, or apply
+the changes back while preserving all PHP translation wrappers.
+
+```bash
+# Report differences only (shows missing translations, editor attrs, CSS issues)
+pbpaste | pt-cli pattern:diff patterns/woo-signature-pieces.php --from-stdin
+
+# Preview the merged result without touching the file
+pbpaste | pt-cli pattern:diff patterns/woo-signature-pieces.php --from-stdin --apply --dry-run
+
+# Apply clipboard changes to the PHP file (preserves esc_html_e, esc_attr_e, etc.)
+pbpaste | pt-cli pattern:diff patterns/woo-signature-pieces.php --from-stdin --apply
+```
+
+**What `--apply` does:**
+
+1. Strips editor-only attributes (`__privatePreviewState`) from block JSON.
+2. Fixes bare font-size slug values (`font-size:small`) → CSS variable (`font-size:var(--wp--preset--font-size--small)`).
+3. Removes nested `<p>` copy artefacts introduced by the Gutenberg clipboard.
+4. Re-maps every text node back to its original PHP wrapper (`esc_html_e`, `esc_attr_e`, `wp_kses_post`) from the existing file.
+5. Generates a new `esc_html_e()` wrapper for any text that is new in the clipboard.
+6. Preserves the PHP docblock header unchanged.
+
+The file is only written when `--apply` is used **without** `--dry-run`.
+
 ## Commands Reference
 
 | Command | Description |
@@ -81,6 +108,7 @@ pt-cli check:templates /path/to/templates/ --theme=elayne --autofix
 | `style:create` | Scaffold a WordPress theme style variation JSON |
 | `check` | Check PHP pattern files for compliance violations |
 | `check:templates` | Check HTML template/part files for block validation drift |
+| `pattern:diff` | Diff Gutenberg clipboard against a pattern file, or apply changes preserving PHP |
 
 ## Workflow
 
@@ -95,6 +123,19 @@ pt-cli check:templates /path/to/templates/ --theme=elayne --autofix
 | 3 | Copy blocks | Copy all blocks from editor | VM |
 | 4 | `pt-cli pattern:create --shell-only` | Create PHP file with paste marker | Host |
 | 5 | Replace marker | Paste blocks into pattern file | Host |
+
+### Pattern Sync Workflow (updating existing patterns)
+
+When an existing PHP pattern needs updating from the Site Editor, use `pattern:diff --apply`
+instead of pasting manually — it keeps all `esc_html_e()` and other PHP wrappers intact.
+
+| Step | Command | Purpose |
+|------|---------|---------|
+| 1 | Edit pattern in Site Editor | Make structural/layout changes |
+| 2 | Copy all blocks (Cmd+A, Cmd+C) | Copy updated block HTML to clipboard |
+| 3 | `pbpaste \| pt-cli pattern:diff <file> --from-stdin --apply --dry-run` | Preview merged result |
+| 4 | `pbpaste \| pt-cli pattern:diff <file> --from-stdin --apply` | Write merged result to file |
+| 5 | `pt-cli check <file> --theme=elayne` | Verify compliance passes |
 
 ### Compliance Workflow (three-pass)
 
