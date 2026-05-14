@@ -137,6 +137,38 @@ class TranslationDetectorTest extends TestCase
     }
 
     // ========================================================================
+    // isTranslated Tests
+    // ========================================================================
+
+    public function testIsTranslatedReturnsTrueWhenTextIsWrapped(): void
+    {
+        $content = "<?php esc_html_e( 'Hello World', 'elayne' ); ?>";
+
+        $this->assertTrue($this->detector->isTranslated('Hello World', $content));
+    }
+
+    public function testIsTranslatedReturnsFalseWhenTextIsBare(): void
+    {
+        $content = '<p>Hello World</p>';
+
+        $this->assertFalse($this->detector->isTranslated('Hello World', $content));
+    }
+
+    public function testIsTranslatedReturnsFalseForDifferentText(): void
+    {
+        $content = "<?php esc_html_e( 'Goodbye', 'elayne' ); ?>";
+
+        $this->assertFalse($this->detector->isTranslated('Hello World', $content));
+    }
+
+    public function testIsTranslatedReturnsTrueWithSingleQuotesInWrapper(): void
+    {
+        $content = "<?php esc_html_e( 'It\\'s fine', 'elayne' ); ?>";
+
+        $this->assertTrue($this->detector->isTranslated("It\\'s fine", $content));
+    }
+
+    // ========================================================================
     // extractTranslatableText Tests
     // ========================================================================
 
