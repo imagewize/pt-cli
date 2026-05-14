@@ -80,11 +80,20 @@ the changes back while preserving all PHP translation wrappers.
 # Report differences only (shows missing translations, editor attrs, CSS issues)
 pbpaste | pt-cli pattern:diff patterns/woo-signature-pieces.php --from-stdin
 
+# Include fix suggestions in the diff report
+pbpaste | pt-cli pattern:diff patterns/woo-signature-pieces.php --from-stdin --show-suggestions
+
+# Output diff results as JSON (for tooling integration)
+pbpaste | pt-cli pattern:diff patterns/woo-signature-pieces.php --from-stdin --json
+
 # Preview the merged result without touching the file
 pbpaste | pt-cli pattern:diff patterns/woo-signature-pieces.php --from-stdin --apply --dry-run
 
 # Apply clipboard changes to the PHP file (preserves esc_html_e, esc_attr_e, etc.)
 pbpaste | pt-cli pattern:diff patterns/woo-signature-pieces.php --from-stdin --apply
+
+# Lower the similarity threshold for loosely matched blocks (default: 0.95)
+pbpaste | pt-cli pattern:diff patterns/woo-signature-pieces.php --from-stdin --similarity-threshold=0.80
 ```
 
 **What `--apply` does:**
