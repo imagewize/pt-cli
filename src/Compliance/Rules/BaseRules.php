@@ -262,9 +262,12 @@ class BaseRules extends AbstractRuleSet
             }
             $pct = (int) $m[1];
             // Scan current line and the next two for the HTML div.
+            // Use a word-boundary match to distinguish wp-block-button (inner div)
+            // from wp-block-buttons (wrapper div that may appear on the same line
+            // as the <!-- wp:button comment when compact inline formatting is used).
             for ($j = $i; $j <= $i + 2 && $j < $total; $j++) {
                 $html = $lines[$j];
-                if (!str_contains($html, 'wp-block-button')) {
+                if (!preg_match('/\bwp-block-button\b(?!s)/', $html)) {
                     continue;
                 }
                 if (!str_contains($html, 'has-custom-width') || !str_contains($html, "wp-block-button__width-{$pct}")) {

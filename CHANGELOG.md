@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.1] - 2026-05-14
+
+### Fixed
+
+- `checkButtonWidthClasses`: false positive when `<!-- wp:button` appears on the same line as the outer `<div class="wp-block-buttons">` wrapper. The previous `str_contains` check matched `wp-block-buttons` as a substring of `wp-block-button`, incorrectly reporting missing `has-custom-width`/`wp-block-button__width-N` classes. Replaced with a word-boundary regex that distinguishes the singular `wp-block-button` (inner div) from the plural `wp-block-buttons` (wrapper).
+
 ## [2.3.0] - 2026-05-14
 
 ### Added
