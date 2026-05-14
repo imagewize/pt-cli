@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-05-14
+
+### Added
+
+- **`pattern:diff` command** (`src/Commands/PatternDiffCommand.php`) — compares a Gutenberg clipboard paste against an existing PHP pattern file and reports differences (missing translations, editor-only attributes, CSS drift, WooCommerce block issues). Options:
+  - `--from-stdin` — read Gutenberg HTML from stdin (pipe from `pbpaste`)
+  - `--apply` — merge clipboard changes into the PHP file, preserving all PHP translation wrappers (`esc_html_e`, `esc_attr_e`, `wp_kses_post`, `get_template_directory_uri`)
+  - `--dry-run` — with `--apply`: print the merged result to stdout instead of writing to disk
+  - `--theme` — theme config to use (default: `elayne`)
+  - `--json` — output diff results as JSON
+  - `--similarity-threshold` — minimum block similarity score to consider a match (0–1, default: `0.95`)
+  - `--show-suggestions` / `-s` — include fix suggestions in the output
+
+- **`BlockNormalizer` class** (`src/PatternDiff/BlockNormalizer.php`) — normalises block HTML for comparison: strips editor-only attributes (`__privatePreviewState`, `isNotStackedOnMobile`, constrained layout flags, product-collection block flags), normalises CSS value tokens (font-size slugs → CSS variables, spacing presets), collapses whitespace, and decodes HTML entities. Exposes `detectEditorAttributes()`, `extractOuterBlockType()`, and `hasWooCommerceBlocks()` as public helpers.
+
+- **`PatternDiffer` class** (`src/PatternDiff/PatternDiffer.php`) — calculates structural similarity between clipboard HTML and a PHP pattern file. Extracts block HTML from PHP, computes a similarity score via `similar_text`, and finds CSS, structural, and text-node differences. WooCommerce plugin paths (`wp-content/plugins/woocommerce/patterns/*`) are exempt via `isExempt()`.
+
+- **`PatternSyncer` class** (`src/PatternDiff/PatternSyncer.php`) — implements the `--apply` merge strategy: extracts the PHP docblock header, builds a `text → PHP call` map from all translation wrappers in the original file, applies structural fixes to the clipboard (strips `__privatePreviewState`, normalises font-size slugs, removes nested `<p>` copy artefacts), then walks every HTML text node replacing raw strings with their original wrappers or generating new `esc_html_e()` calls for new strings.
+
+- **`TranslationDetector` class** (`src/PatternDiff/TranslationDetector.php`) — finds text nodes in clipboard HTML that are not yet wrapped in a translation function in the existing PHP file. Generates `esc_html_e()` fix suggestions. Exposes `isTranslated()`, `generateTranslationWrapper()`, and `extractTranslatableText()` as public helpers.
+
+- **`WooCommerceValidator` class** (`src/PatternDiff/WooCommerceValidator.php`) — validates WooCommerce-specific block structure in the diff context: checks `isDescendentOfQueryLoop` on WC blocks inside `product-template`, validates `<div>` wrappers and layout attributes, and inspects `product-collection` query metadata.
+
+- **PHPUnit test suite for `PatternDiff`** — 6 new test files covering all public methods in the feature:
+  - `tests/PatternDiff/BlockNormalizerTest.php` — 29 tests for all normalisation methods
+  - `tests/PatternDiff/PatternDifferTest.php` — 5 tests (diff result shape, identical-file similarity, PHP extraction, exempt paths)
+  - `tests/PatternDiff/PatternSyncerTest.php` — 22 tests (header extraction/stripping, PHP call map, structural fixes, translation restore, wrapper generation)
+  - `tests/PatternDiff/TranslationDetectorTest.php` — 16 tests (missing translation detection, `isTranslated`, `generateTranslationWrapper`, `extractTranslatableText`)
+  - `tests/PatternDiff/WooCommerceValidatorTest.php` — 6 tests (validate, extractWooCommerceBlocks, isDescendantOfProductTemplate)
+  - `tests/Commands/PatternDiffCommandTest.php` — 9 tests (command name, path validation, apply/dry-run guards, JSON output, threshold, theme option)
+
+### Fixed
+
+- **`PatternDiffer::isTranslatable()`** — the `if (preg_match(...))` guard around the CSS-value `return false` branch was accidentally omitted, causing the method to always return `false` after the single-character check. All text nodes after that point were silently skipped by the translation detector.
+
+### Changed
+
+- **`.vibe/config.toml`** — `python` and `python3` removed from the vibe tools denylist to allow local script execution during pattern diffing.
+
 ## [2.2.3] - 2026-05-13
 
 ### Added
