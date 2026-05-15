@@ -16,6 +16,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Dry-run mode via `WP_REBUILD_DRY_RUN=1` environment variable
   - Works with any FSE block theme (not just Elayne)
 
+### Changed
+
+- Moved demo rebuild script documentation from `README.md` to `docs/demo-rebuild-script.md` for better organization
+- Added `docs/index.php` and `scripts/index.php` with "silence is golden" to prevent directory browsing
+
 ## [2.3.1] - 2026-05-14
 
 ### Fixed
