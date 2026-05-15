@@ -9,13 +9,13 @@
  *
  * -------------------------------------------------------------------------
  * Single-site usage (run from your WordPress root):
- *   wp --path=web/wp eval-file web/app/themes/elayne/scripts/rebuild-demo.php
+ *   wp --path=web/wp eval-file web/app/themes/your-theme/scripts/rebuild-demo.php
  *
  * Multisite usage — pass --url= to target the correct subsite AND pass the
  * subsite slug as a positional argument so the script selects the right entry
  * from the nested $page_map:
  *   wp --path=web/wp --url=example.com/store/ \
- *     eval-file web/app/themes/elayne/scripts/rebuild-demo.php store
+ *     eval-file web/app/themes/your-theme/scripts/rebuild-demo.php store
  *
  * IMPORTANT for multisite: page IDs are per-subsite blog, not global.
  * Always pass --url= so WP-CLI switches to the right blog context before
@@ -24,15 +24,13 @@
  *
  * Dry-run (shows what would be updated, no writes):
  *   WP_REBUILD_DRY_RUN=1 wp --path=web/wp --url=example.com/store/ \
- *     eval-file web/app/themes/elayne/scripts/rebuild-demo.php store
+ *     eval-file web/app/themes/your-theme/scripts/rebuild-demo.php store
  * -------------------------------------------------------------------------
  *
  * CUSTOMIZE: Update the arrays below with your own page IDs and pattern paths.
  * Page IDs are per-subsite — discover them with:
  *   wp post list --post_type=page --fields=ID,post_title,post_name \
  *     --path=web/wp --url=example.com/store/
- *
- * @package Elayne
  */
 
 // Security: never execute via a web request.
