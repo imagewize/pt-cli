@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-05-15
+
+### Added
+
+- **`scripts/rebuild-demo.php`** — WP-CLI script to rebuild demo pages from pattern PHP files. Renders each pattern file in the live WordPress context and overwrites the page's `post_content`, identical to a fresh block-editor insert. Supports:
+  - Single-site and multisite configurations
+  - Mapping page IDs to one or more pattern files (concatenated in order)
+  - Optional push of custom `.html` templates to the WP database
+  - Optional push of custom template parts (header, footer, etc.) to the WP database
+  - Dry-run mode via `WP_REBUILD_DRY_RUN=1` environment variable
+  - Works with any FSE block theme (not just Elayne)
+
+### Changed
+
+- Moved demo rebuild script documentation from `README.md` to `docs/demo-rebuild-script.md` for better organization
+- Added `docs/index.php` and `scripts/index.php` with "silence is golden" to prevent directory browsing
+
 ## [2.3.1] - 2026-05-14
 
 ### Fixed

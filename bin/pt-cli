@@ -22,7 +22,7 @@ use Imagewize\PtCli\Commands\Scaffold\StyleCreateCommand;
 use Imagewize\PtCli\Commands\TemplateCheckCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('pt-cli', '2.3.1');
+$application = new Application('pt-cli', '2.4.0');
 $application->add(new CheckCommand());
 $application->add(new TemplateCheckCommand());
 $application->add(new PatternCreateCommand());

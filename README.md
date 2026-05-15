@@ -333,6 +333,10 @@ Applied to `.html` files in `templates/` and `parts/` directories. These checks 
 
 The `check` command processes PHP pattern files. HTML template files use a different structure — raw block markup without PHP wrappers — and require different checks. In particular, WooCommerce 9.x+ changed the `save()` output for filter blocks to include empty `<div>` wrappers; templates written against older versions lack those wrappers and trigger client-side block validation errors that neither WP-CLI nor the PHP checker can catch.
 
+## Demo Rebuild Script
+
+For rebuilding demo pages from pattern PHP files, see the [Demo Rebuild Script guide](docs/demo-rebuild-script.md).
+
 ## Development
 
 ```bash
