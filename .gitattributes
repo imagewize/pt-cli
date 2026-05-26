@@ -1,0 +1,31 @@
+# Exclude development files from Composer installs and git archives
+.git export-ignore
+.github export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+.distignore export-ignore
+.claude export-ignore
+.DS_Store export-ignore
+.vscode export-ignore
+.idea export-ignore
+
+phpunit.xml export-ignore
+composer.json export-ignore
+composer.lock export-ignore
+
+tests export-ignore
+vendor export-ignore
+docs export-ignore
+scripts export-ignore
+.vibe export-ignore
+
+AGENTS.md export-ignore
+CLAUDE.md export-ignore
+README.md export-ignore
+CHANGELOG.md export-ignore
+
+*.sh export-ignore
+*.log export-ignore
+*.swp export-ignore
+*.swo export-ignore
+*~ export-ignore
