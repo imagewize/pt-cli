@@ -3,7 +3,6 @@
     "description": "Pattern scaffolding and compliance checker for WordPress FSE block themes",
     "type": "project",
     "license": "MIT",
-    "version": "2.4.2",
     "require": {
         "php": ">=8.1",
         "symfony/console": "^6.4|^7.0"
