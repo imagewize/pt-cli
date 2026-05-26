@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.1] - 2026-05-26
+
+### Added
+
+- **`.gitattributes`** — controls which files are excluded from Composer installs and `git archive` exports: development directories (`tests/`, `docs/`, `scripts/`, `vendor/`), editor config (`.vscode/`, `.idea/`, `.vibe/`), AI tooling (`.claude/`), build artefacts (`*.sh`, `*.log`, `*.swp`), and CI/CD config (`.github/`, `phpunit.xml`, `composer.lock`). Runtime directories (`src/`, `config/`, `templates/`, `layouts/`, `css/`, `snippets/`) are kept so the tool works after `composer install`.
+
 ## [2.4.0] - 2026-05-15
 
 ### Added
