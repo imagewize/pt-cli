@@ -10,7 +10,6 @@
 .idea export-ignore
 
 phpunit.xml export-ignore
-composer.json export-ignore
 composer.lock export-ignore
 
 tests export-ignore
