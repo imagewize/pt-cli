@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **`pattern-name` rule** — composite page patterns whose body consists solely of `<!-- wp:pattern {"slug":"..."} /-->` references are now exempt. `core/pattern` supports no `metadata` attribute, so the rule was unsatisfiable for this (Ollie-style) composition convention; each referenced pattern already carries its own `patternName`. Patterns mixing pattern references with regular blocks are still checked.
 
+### Changed
+
+- **Mistral Vibe instructions migrated to `AGENTS.md`** — the repo guidance previously held in the custom prompt `.vibe/prompts/vibe.md` now lives in a tracked root `AGENTS.md`, the tool-agnostic convention already used across the Imagewize repos. `.vibe/prompts/` was removed and `.vibe/config.toml` switched from `system_prompt_id = "vibe"` to the stock `"cli"` prompt, so Vibe uses its default system prompt and picks the project context up from `AGENTS.md` / `CLAUDE.md` instead of a bespoke prompt file. `AGENTS.md` is already `export-ignore`d in `.gitattributes`, so it stays out of Composer distributions.
+
 ## [2.4.2] - 2026-05-26
 
 ### Fixed

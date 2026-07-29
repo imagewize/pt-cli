@@ -1,14 +1,14 @@
-# Custom Instructions for Vibe
+# Repository Guidelines
 
 ## Primary Directive
-Always follow the rules and conventions in the project's `CLAUDE.md` file. This is your authoritative source for all project-specific guidance.
+Always follow the rules and conventions in the project's `CLAUDE.md` file. This is the authoritative source for all project-specific guidance.
 
 ## Project Overview
 **pt-cli** is a standalone PHP CLI tool that checks WordPress FSE block theme pattern files for structural and naming compliance. It runs on the host machine with no WordPress context — pure PHP regex/string analysis.
 
 - **Type**: PHP CLI application (Symfony Console)
 - **Minimum PHP**: 8.1
-- **Namespace**: `Imagewize\PtCli\` (src/), `Imagewize\PtCli\Tests\` (tests/)
+- **Namespace**: `Imagewize\PtCli\` (`src/`), `Imagewize\PtCli\Tests\` (`tests/`)
 - **Package**: `imagewize/pt-cli`
 
 ## Workflow Context
@@ -20,7 +20,7 @@ Always follow the rules and conventions in the project's `CLAUDE.md` file. This 
 | 2 | `wp pattern validate` | VM | Structural validation (WordPress parser) |
 | 3 | `pt-cli check` | Host | Compliance checking |
 
-## Project Structure
+## Project Structure & Module Organization
 ```
 bin/pt-cli                  Entry point — registers CheckCommand as default
 src/
@@ -33,15 +33,15 @@ src/
     Rules/
       RuleSetInterface       Contract: getName(), check(filePath): array, isAutofixable(), autofix(content)
       AbstractRuleSet        Defaults: isAutofixable()=false, autofix()=passthrough, violation() helper
-      BaseRules              All FSE theme rules (stubbed — see CLAUDE.md for rule list)
-      WooCommerceRules       WC-specific rules (stubbed — enabled per config)
+      BaseRules              All FSE theme rules (see CLAUDE.md for the rule catalog)
+      WooCommerceRules       WC-specific rules (enabled per config)
   Utils/                     Shared helpers
 config/
   base.json                  Default config for any FSE theme
   elayne.json                Elayne theme overrides (extends base)
 ```
 
-## Commands
+## Build, Test, and Development Commands
 ```bash
 # Install dependencies
 composer install
@@ -65,41 +65,25 @@ Three-tier config merge (priority order):
 Configs are deep-merged; `ThemeConfig` exposes typed getters (`getPatternPrefix()`, `woocommerceEnabled()`, `getRules()`, etc.).
 
 ## Key Principles
-- **No WordPress context**: Pure PHP regex/string analysis on pattern `.php` files
+- **No WordPress context**: pure PHP regex/string analysis on pattern `.php` files
 - **Autofix flag**: `--autofix` applies mechanical fixes (strip inline gap/margin, reorder button JSON keys, migrate fontSize, inject font-size classes)
-- **Exceptions**: Template files (`template-*`, `header-*`, `footer-*`) allow specific border-radius values; WooCommerce plugin patterns are exempt
-- **Rule sets**: BaseRules (all FSE themes) and WooCommerceRules (when `woocommerce.enabled: true`)
+- **Exceptions**: template files (`template-*`, `header-*`, `footer-*`) allow specific border-radius values; WooCommerce plugin patterns are exempt
+- **Rule sets**: `BaseRules` (all FSE themes) and `WooCommerceRules` (when `woocommerce.enabled: true`)
 
 ## Before Responding
-1. **Review CLAUDE.md** for:
-   - Full rule catalog and severity levels
-   - Architecture details and stub locations
-   - Current implementation state (rules are stubbed)
-
-2. **Check Current Context**:
-   - Verify you're working in the correct directory
-   - Confirm the current branch and git status
-   - Review recent commits for relevant changes
-
-3. **Adhere to Conventions**:
-   - Never mention AI tools in commit messages
-   - All commands run from the host machine (not a VM)
-   - `.vibe/` directories are untracked and should remain so
-   - Follow PSR-4 autoloading (`Imagewize\PtCli\` namespace)
+1. **Review `CLAUDE.md`** for the full rule catalog and severity levels, architecture details and stub locations, and the current implementation state.
+2. **Check current context**: verify the working directory, confirm the branch and git status, and review recent commits for relevant changes.
+3. **Adhere to conventions**: all commands run from the host machine (not a VM); follow PSR-4 autoloading under the `Imagewize\PtCli\` namespace; dev-only files (`tests/`, `docs/`, `.vibe/`, `AGENTS.md`, `CLAUDE.md`) are `export-ignore`d in `.gitattributes` and must stay out of Composer distributions.
 
 ## Response Guidelines
 - Be concise and technical
 - Reference specific files, line numbers, and rule IDs
 - Use markdown formatting for code and structure
-- Prioritize verification over assumptions
+- Prioritise verification over assumptions
 - When unsure, ask for clarification before acting
 
 ## Commit Guidelines
-- **Atomic commits**: Always make atomic commits, adding files individually or in logical groups with specific, descriptive messages
-- **No AI attribution**: Never mention Mistral Vibe, AI tools, or any co-authoring attribution in commit messages
+- **Atomic commits**: add files individually or in logical groups with specific, descriptive messages
+- **No AI attribution**: never mention any AI tool or co-authoring attribution in commit messages. This applies to all files and directories in the repository.
 - Keep all commits professional and attribution-free
 - Follow standard git commit message format
-
-## NO Mistral Vibe Attribution in Any Commits
-- Do NOT include "Generated by Mistral Vibe. Co-Authored-By: Mistral Vibe <vibe@mistral.ai>" attribution
-- This applies to ALL files and directories in the entire repository
