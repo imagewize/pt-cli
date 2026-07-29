@@ -15,7 +15,6 @@ composer.lock export-ignore
 tests export-ignore
 vendor export-ignore
 docs export-ignore
-scripts export-ignore
 .vibe export-ignore
 
 AGENTS.md export-ignore

@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-07-29
+
+### Fixed
+
+- **`.gitattributes`** — removed `scripts export-ignore`, which excluded `scripts/rebuild-demo.php` from every Composer install since 2.4.1. That script is a documented, user-facing feature added in 2.4.0 (`vendor/imagewize/pt-cli/scripts/rebuild-demo.php`), not development tooling, so the path in the docs resolved to nothing on any install of 2.4.1 or later. `tests/`, `docs/`, and `vendor/` remain excluded.
+
+### Added
+
+- **`scripts/rebuild-demo.php` — environment-aware maps.** `$page_map`, `$templates` and `$template_parts` may now be keyed by `dev` / `prod` at the top level, for sites whose page IDs differ between local and production. The branch is selected from `home_url()` (a `.test` host means dev) and can be overridden with a second positional argument (`eval-file scripts/rebuild-demo.php store prod`). Maps without those keys are used unchanged, so existing flat and subsite-nested maps keep working untouched.
+- **`scripts/rebuild-demo.php` — configurable page template.** The script previously hardcoded `'page_template' => 'default'` on every page it rebuilt, silently clearing any custom page template the page had been assigned. The template is now set by `$page_template` (default `'default'`, unchanged behaviour) with an optional per-subsite `$page_templates` override — e.g. a theme's `page-no-title` for demo pages whose patterns carry their own heading.
+- **`scripts/rebuild-demo.php`** — a subsite present in `$page_map` but with an empty mapping now reports that explicitly instead of falling through to the generic "No pages configured" error. The header also notes that the file should be copied into your own site and customised there, since edits inside `vendor/` are overwritten by the next `composer update`.
+
+Both additions are ported from the customised copy running the imagewize.com demo multisite, which had diverged from the shipped template.
+
 ## [2.4.3] - 2026-07-29
 
 ### Fixed
