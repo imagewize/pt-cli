@@ -629,9 +629,21 @@ class BaseRules extends AbstractRuleSet
         return $violations;
     }
 
+    /**
+     * A composite page pattern is a body made up solely of `wp:pattern` references
+     * (the Ollie convention). `core/pattern` supports no metadata attribute, and each
+     * referenced pattern already carries its own patternName, so the rule cannot apply.
+     */
+    private function isCompositePattern(string $content): bool
+    {
+        $body = trim((string) preg_replace('/<\?php.*?\?>/s', '', $content));
+
+        return $body !== '' && (bool) preg_match('#^(?:<!--\s*wp:pattern\s+\{[^\n]*\}\s*/-->\s*)+$#', $body);
+    }
+
     private function checkPatternName(string $content, bool $isTemplate): array
     {
-        if ($isTemplate) {
+        if ($isTemplate || $this->isCompositePattern($content)) {
             return [];
         }
 

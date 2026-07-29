@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.3] - 2026-07-29
+
+### Fixed
+
+- **`pattern-name` rule** — composite page patterns whose body consists solely of `<!-- wp:pattern {"slug":"..."} /-->` references are now exempt. `core/pattern` supports no `metadata` attribute, so the rule was unsatisfiable for this (Ollie-style) composition convention; each referenced pattern already carries its own `patternName`. Patterns mixing pattern references with regular blocks are still checked.
+
 ## [2.4.2] - 2026-05-26
 
 ### Fixed
