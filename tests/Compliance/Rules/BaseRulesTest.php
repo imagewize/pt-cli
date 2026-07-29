@@ -454,4 +454,59 @@ PHP;
         $ruleNames = array_column($violations, 'rule');
         $this->assertNotContains('border-property-order-in-html', $ruleNames);
     }
+
+    // ========================================================================
+    // Pattern Name Tests
+    // ========================================================================
+
+    private function rulesRequiringPatternName(): BaseRules
+    {
+        return new BaseRules(new ThemeConfig([
+            'theme' => ['slug' => 'test-theme', 'patternPrefix' => 'test/'],
+            'compliance' => ['rules' => ['requirePatternName' => true]],
+        ]));
+    }
+
+    public function testCompositePatternOfPatternRefsIsExemptFromPatternName(): void
+    {
+        $content = <<<'PHP'
+            <?php
+            /**
+             * Title: Test Page
+             * Slug: test/page-home
+             */
+            if ( ! defined( 'ABSPATH' ) ) {
+                exit;
+            }
+            ?>
+            <!-- wp:pattern {"slug":"test/hero"} /-->
+            <!-- wp:pattern {"slug":"test/cta"} /-->
+            PHP;
+
+        $file = $this->createTempFile($content);
+        $violations = $this->rulesRequiringPatternName()->check($file);
+
+        $this->assertNotContains('pattern-name', array_column($violations, 'rule'));
+    }
+
+    public function testNonCompositePatternStillRequiresPatternName(): void
+    {
+        $content = <<<'PHP'
+            <?php
+            /**
+             * Title: Test Page
+             * Slug: test/page-home
+             */
+            ?>
+            <!-- wp:pattern {"slug":"test/hero"} /-->
+            <!-- wp:group {"align":"full"} -->
+            <div class="wp-block-group alignfull"></div>
+            <!-- /wp:group -->
+            PHP;
+
+        $file = $this->createTempFile($content);
+        $violations = $this->rulesRequiringPatternName()->check($file);
+
+        $this->assertContains('pattern-name', array_column($violations, 'rule'));
+    }
 }
