@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.4] - 2026-07-29
+
+### Fixed
+
+- **`.gitattributes`** — removed `scripts export-ignore`, which excluded `scripts/rebuild-demo.php` from every Composer install since 2.4.1. That script is a documented, user-facing feature added in 2.4.0 (`vendor/imagewize/pt-cli/scripts/rebuild-demo.php`), not development tooling, so the path in the docs resolved to nothing on any install of 2.4.1 or later. `tests/`, `docs/`, and `vendor/` remain excluded.
+
 ## [2.4.3] - 2026-07-29
 
 ### Fixed
