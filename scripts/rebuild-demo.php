@@ -31,6 +31,16 @@
  * Page IDs are per-subsite — discover them with:
  *   wp post list --post_type=page --fields=ID,post_title,post_name \
  *     --path=web/wp --url=example.com/store/
+ *
+ * Copy this file into your own site (e.g. scripts/rebuild-demo.php at the
+ * Bedrock root) and customise the copy. Editing it inside vendor/ works until
+ * the next `composer update`, which overwrites it.
+ *
+ * ENVIRONMENTS: any of the maps below may optionally be keyed by 'dev' / 'prod'
+ * at the top level. When they are, the matching branch is selected from
+ * home_url() (a '.test' host means dev). Override with a second positional
+ * argument:
+ *   eval-file scripts/rebuild-demo.php store prod
  */
 
 // Security: never execute via a web request.
@@ -40,6 +50,35 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 
 $dry_run = getenv( 'WP_REBUILD_DRY_RUN' ) === '1';
 $subsite = isset( $args[0] ) ? trim( $args[0] ) : '';
+
+// Environment: auto-detected from home_url(), overridable with a second argument.
+$env_arg = isset( $args[1] ) ? trim( $args[1] ) : '';
+if ( in_array( $env_arg, array( 'dev', 'prod' ), true ) ) {
+	$env = $env_arg;
+} else {
+	$env = ( false !== strpos( home_url(), '.test' ) ) ? 'dev' : 'prod';
+}
+
+/**
+ * Select the current environment's branch of a map.
+ *
+ * Maps that are not keyed by 'dev'/'prod' are returned untouched, so
+ * environment support costs nothing if you do not use it.
+ *
+ * @param array $map Map to resolve.
+ * @return array
+ */
+$resolve_env = static function ( array $map ) use ( $env ) {
+	static $logged = false;
+	if ( ! array_key_exists( 'dev', $map ) && ! array_key_exists( 'prod', $map ) ) {
+		return $map;
+	}
+	if ( ! $logged ) {
+		WP_CLI::log( "Environment: $env" );
+		$logged = true;
+	}
+	return isset( $map[ $env ] ) ? $map[ $env ] : array();
+};
 
 /*
  * CUSTOMIZE: Map page IDs to one or more pattern files (relative to theme root).
@@ -62,12 +101,27 @@ $page_map = array(
 	// Add your page ID => pattern file mappings here.
 );
 
+/*
+ * CUSTOMIZE: page template assigned to every rebuilt page. Set a per-subsite
+ * override where a subsite needs a different one — e.g. a theme's
+ * 'page-no-title' template for demo pages whose patterns carry their own
+ * heading:
+ *   $page_templates = array( 'store' => 'page-no-title' );
+ */
+$page_template  = 'default';
+$page_templates = array();
+
+$page_map = $resolve_env( $page_map );
+
 // Resolve flat vs. nested map.
 if ( ! empty( $subsite ) ) {
 	if ( ! array_key_exists( $subsite, $page_map ) ) {
 		WP_CLI::error( "Unknown subsite '$subsite'. Keys in \$page_map: " . implode( ', ', array_keys( $page_map ) ) );
 	}
 	$page_entries = $page_map[ $subsite ];
+	if ( empty( $page_entries ) ) {
+		WP_CLI::error( "Subsite '$subsite' has no page mapping yet. Add it to \$page_map in this script." );
+	}
 } else {
 	$page_entries = $page_map;
 }
@@ -75,6 +129,10 @@ if ( ! empty( $subsite ) ) {
 if ( empty( $page_entries ) ) {
 	WP_CLI::error( 'No pages configured. Edit $page_map in scripts/rebuild-demo.php with your page IDs and pattern paths.' );
 }
+
+$active_page_template = ( ! empty( $subsite ) && isset( $page_templates[ $subsite ] ) )
+	? $page_templates[ $subsite ]
+	: $page_template;
 
 $theme_dir = get_template_directory();
 
@@ -111,7 +169,7 @@ foreach ( $page_entries as $page_id => $pattern_files ) {
 		array(
 			'ID'            => $page_id,
 			'post_content'  => $content,
-			'page_template' => 'default',
+			'page_template' => $active_page_template,
 		),
 		true
 	);
@@ -142,6 +200,8 @@ foreach ( $page_entries as $page_id => $pattern_files ) {
  *   );
  */
 $templates = array();
+
+$templates = $resolve_env( $templates );
 
 // Resolve flat vs. nested templates.
 if ( ! empty( $subsite ) ) {
@@ -239,6 +299,8 @@ if ( ! empty( $active_templates ) ) {
  *   );
  */
 $template_parts = array();
+
+$template_parts = $resolve_env( $template_parts );
 
 // Resolve flat vs. nested template parts.
 if ( ! empty( $subsite ) ) {
