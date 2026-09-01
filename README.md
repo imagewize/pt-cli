@@ -1,5 +1,9 @@
 # WordPress Pattern Toolkit
 
+[![Total Downloads](https://img.shields.io/packagist/dt/imagewize/pt-cli.svg)](https://packagist.org/packages/imagewize/pt-cli)
+[![Latest Stable Version](https://img.shields.io/packagist/v/imagewize/pt-cli.svg)](https://packagist.org/packages/imagewize/pt-cli)
+[![License](https://img.shields.io/packagist/l/imagewize/pt-cli.svg)](https://packagist.org/packages/imagewize/pt-cli)
+
 Scaffolding, compliance checking, and HTML template validation for WordPress FSE block themes.
 
 Generates block pattern PHP files, layout patterns, and style variations. Checks pattern `.php` files for structural and naming rule violations, and checks HTML template/part files for client-side block validation drift — no WordPress context required. Runs on the host machine as a standalone PHP CLI tool.
