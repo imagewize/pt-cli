@@ -509,4 +509,53 @@ PHP;
 
         $this->assertContains('pattern-name', array_column($violations, 'rule'));
     }
+
+    // ========================================================================
+    // Image height:auto Tests
+    // ========================================================================
+
+    private function imagePattern(string $style): string
+    {
+        return <<<PHP
+<?php
+/**
+ * Title: Test Pattern
+ * Slug: test/test
+ */
+?>
+
+<!-- wp:image {"width":"32px","sizeSlug":"full","linkDestination":"none"} -->
+<figure class="wp-block-image size-full is-resized"><img src="a.svg" alt="" style="{$style}"/></figure>
+<!-- /wp:image -->
+PHP;
+    }
+
+    public function testImageHeightAutoFlagsWidthOnlyStyle(): void
+    {
+        $file = $this->createTempFile($this->imagePattern('width:32px'));
+        $found = array_values(array_filter($this->rules->check($file), fn($v) => $v['rule'] === 'image-height-auto'));
+
+        $this->assertCount(1, $found);
+        $this->assertSame(9, $found[0]['line']);
+    }
+
+    public function testImageHeightAutoAcceptsHeightAuto(): void
+    {
+        $file = $this->createTempFile($this->imagePattern('width:32px;height:auto'));
+        $found = array_filter($this->rules->check($file), fn($v) => $v['rule'] === 'image-height-auto');
+
+        $this->assertCount(0, $found);
+    }
+
+    public function testImageHeightAutoAutofixAppendsHeightAuto(): void
+    {
+        $applied = [];
+        $fixed = $this->rules->autofix($this->imagePattern('width:32px'), $applied);
+
+        $this->assertStringContainsString('style="width:32px;height:auto"', $fixed);
+        $this->assertNotEmpty($applied);
+
+        $again = [];
+        $this->assertSame($fixed, $this->rules->autofix($fixed, $again));
+    }
 }

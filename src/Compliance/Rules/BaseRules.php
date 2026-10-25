@@ -62,6 +62,7 @@ class BaseRules extends AbstractRuleSet
         $violations = array_merge($violations, $this->checkButtonRootFontSize($content));
         $violations = array_merge($violations, $this->checkButtonClassNameOrder($content));
         $violations = array_merge($violations, $this->checkButtonWidthClasses($content));
+        $violations = array_merge($violations, $this->checkImageHeightAuto($content));
         $violations = array_merge($violations, $this->checkCoverBlockMinHeight($content));
         $violations = array_merge($violations, $this->checkEmptyBorderSideObjects($content));
         $violations = array_merge($violations, $this->checkBorderColorRawSlug($content));
@@ -90,6 +91,7 @@ class BaseRules extends AbstractRuleSet
         $content = $this->autofixButtonAttributeOrder($content, $applied);
         $content = $this->autofixButtonFontSize($content, $applied);
         $content = $this->autofixInjectFontSizeClass($content, $applied);
+        $content = $this->autofixImageHeightAuto($content, $applied);
         return $content;
     }
 
@@ -286,6 +288,65 @@ class BaseRules extends AbstractRuleSet
             }
         }
         return [];
+    }
+
+    private function checkImageHeightAuto(string $content): array
+    {
+        // core/image save() emits style="width:Npx;height:auto" for resized images.
+        // An <img> carrying only width:Npx makes the editor report a deprecation
+        // migration ("Block was migrated by a deprecation and will save different markup").
+        $violations = [];
+        if (!preg_match_all('/<!-- wp:image\b.*?<!-- \/wp:image -->/s', $content, $blocks, PREG_OFFSET_CAPTURE)) {
+            return [];
+        }
+        foreach ($blocks[0] as [$block, $offset]) {
+            if (!preg_match('/<img\b[^>]*\sstyle="([^"]*)"/', $block, $m, PREG_OFFSET_CAPTURE)) {
+                continue;
+            }
+            if (!$this->imageStyleNeedsHeightAuto($m[1][0])) {
+                continue;
+            }
+            $line = substr_count($content, "\n", 0, $offset + $m[0][1]) + 1;
+            $violations[] = $this->violation(
+                'image-height-auto',
+                'wp:image <img> has an inline width but no height:auto — core/image save() emits style="width:Npx;height:auto", so the editor flags this block as migrated by a deprecation. Append ;height:auto (--autofix does this).',
+                $line
+            );
+        }
+        return $violations;
+    }
+
+    private function imageStyleNeedsHeightAuto(string $style): bool
+    {
+        return (bool) preg_match('/(?:^|;)\s*width\s*:/', $style)
+            && !preg_match('/(?:^|;)\s*height\s*:/', $style);
+    }
+
+    private function autofixImageHeightAuto(string $content, array &$applied): string
+    {
+        $count = 0;
+        $out = preg_replace_callback(
+            '/<!-- wp:image\b.*?<!-- \/wp:image -->/s',
+            function ($block) use (&$count) {
+                return preg_replace_callback(
+                    '/(<img\b[^>]*\sstyle=")([^"]*)(")/',
+                    function ($m) use (&$count) {
+                        if (!$this->imageStyleNeedsHeightAuto($m[2])) {
+                            return $m[0];
+                        }
+                        $count++;
+                        return $m[1] . rtrim($m[2], "; ") . ';height:auto' . $m[3];
+                    },
+                    $block[0]
+                );
+            },
+            $content
+        );
+        if ($count > 0) {
+            $applied[] = 'append height:auto to wp:image <img> style (' . $count . ')';
+            return $out;
+        }
+        return $content;
     }
 
     private function checkCoverBlockMinHeight(string $content): array
