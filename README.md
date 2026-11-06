@@ -315,6 +315,7 @@ Config lookup order:
 | Reorder button JSON keys (`className` before `style`) |
 | Migrate button root `fontSize` to `style.typography` |
 | Inject `has-{slug}-font-size` class on heading/paragraph |
+| Append `;height:auto` to `wp:image` `<img>` styles that set only a width |
 
 ### Exceptions
 

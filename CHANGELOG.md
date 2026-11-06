@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2026-10-25
+
+### Added
+
+- **`image-height-auto` rule** — flags a `wp:image` whose `<img>` has an inline `width` but no `height`. core/image `save()` emits `style="width:32px;height:auto"`, so a width-only style passes `pt-cli check` yet the editor reports "Block was migrated by a deprecation and will save different markup". `--autofix` appends `;height:auto`. Closes #16.
+
 ## [2.5.0] - 2026-07-29
 
 ### Fixed
